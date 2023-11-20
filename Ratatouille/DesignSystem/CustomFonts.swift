@@ -14,7 +14,7 @@ enum CustomFont: String {
     case ComicItalic = "ComicNeue-Italic"
     case ComicLight = "ComicNeue-Light"
     case ComicLightItalic = "ComicNeue-LightItalic"
-
+    
     var name: String {
         return self.rawValue
     }

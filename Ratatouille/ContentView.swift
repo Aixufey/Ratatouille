@@ -15,15 +15,9 @@ struct ContentView: View {
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
         animation: .default)
     private var items: FetchedResults<Item>
-    init() {
-        for family in UIFont.familyNames.sorted() {
-            let names = UIFont.fontNames(forFamilyName: family)
-            print("Family: \(family) Font names: \(names)")
-        }
 
-    }
     var body: some View {
-        
+        Text("Helllro")
         NavigationView {
             List {
                 ForEach(items) { item in

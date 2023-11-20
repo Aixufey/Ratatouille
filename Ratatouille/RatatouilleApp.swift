@@ -15,6 +15,7 @@ struct RatatouilleApp: App {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .font(.custom(CustomFont.ComicBoldItalic.name, size: 20))
         }
     }
 }

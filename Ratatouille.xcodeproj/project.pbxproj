@@ -24,6 +24,7 @@
 		716D14162B0BD7BA00BB1DF3 /* ComicNeue-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 716D14132B0BD7BA00BB1DF3 /* ComicNeue-LightItalic.ttf */; };
 		716D14192B0BD92100BB1DF3 /* CustomFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D14182B0BD92100BB1DF3 /* CustomFonts.swift */; };
 		716D141B2B0BDF4A00BB1DF3 /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D141A2B0BDF4A00BB1DF3 /* CustomColor.swift */; };
+		716D141D2B0BF5BC00BB1DF3 /* ImageAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D141C2B0BF5BC00BB1DF3 /* ImageAsset.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,7 @@
 		716D14132B0BD7BA00BB1DF3 /* ComicNeue-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ComicNeue-LightItalic.ttf"; sourceTree = "<group>"; };
 		716D14182B0BD92100BB1DF3 /* CustomFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFonts.swift; sourceTree = "<group>"; };
 		716D141A2B0BDF4A00BB1DF3 /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
+		716D141C2B0BF5BC00BB1DF3 /* ImageAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAsset.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +173,7 @@
 				716D14072B0BD18B00BB1DF3 /* Font */,
 				716D14182B0BD92100BB1DF3 /* CustomFonts.swift */,
 				716D141A2B0BDF4A00BB1DF3 /* CustomColor.swift */,
+				716D141C2B0BF5BC00BB1DF3 /* ImageAsset.swift */,
 			);
 			path = DesignSystem;
 			sourceTree = "<group>";
@@ -311,6 +314,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				716D141D2B0BF5BC00BB1DF3 /* ImageAsset.swift in Sources */,
 				7164818F2B0235130020C704 /* Persistence.swift in Sources */,
 				716481882B0235110020C704 /* ContentView.swift in Sources */,
 				716D141B2B0BDF4A00BB1DF3 /* CustomColor.swift in Sources */,
