@@ -16,6 +16,14 @@
 		7164819C2B0235130020C704 /* RatatouilleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7164819B2B0235130020C704 /* RatatouilleTests.swift */; };
 		716481A62B0235130020C704 /* RatatouilleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716481A52B0235130020C704 /* RatatouilleUITests.swift */; };
 		716481A82B0235130020C704 /* RatatouilleUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716481A72B0235130020C704 /* RatatouilleUITestsLaunchTests.swift */; };
+		716D14092B0BD1AA00BB1DF3 /* ComicNeue-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 716D14082B0BD1AA00BB1DF3 /* ComicNeue-Regular.ttf */; };
+		716D140B2B0BD1D600BB1DF3 /* ComicNeue-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 716D140A2B0BD1D600BB1DF3 /* ComicNeue-Italic.ttf */; };
+		716D140E2B0BD4DD00BB1DF3 /* ComicNeue-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 716D140D2B0BD4DD00BB1DF3 /* ComicNeue-BoldItalic.ttf */; };
+		716D14142B0BD7BA00BB1DF3 /* ComicNeue-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 716D14112B0BD7BA00BB1DF3 /* ComicNeue-Bold.ttf */; };
+		716D14152B0BD7BA00BB1DF3 /* ComicNeue-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 716D14122B0BD7BA00BB1DF3 /* ComicNeue-Light.ttf */; };
+		716D14162B0BD7BA00BB1DF3 /* ComicNeue-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 716D14132B0BD7BA00BB1DF3 /* ComicNeue-LightItalic.ttf */; };
+		716D14192B0BD92100BB1DF3 /* CustomFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D14182B0BD92100BB1DF3 /* CustomFonts.swift */; };
+		716D141B2B0BDF4A00BB1DF3 /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D141A2B0BDF4A00BB1DF3 /* CustomColor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +56,15 @@
 		716481A12B0235130020C704 /* RatatouilleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RatatouilleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		716481A52B0235130020C704 /* RatatouilleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatatouilleUITests.swift; sourceTree = "<group>"; };
 		716481A72B0235130020C704 /* RatatouilleUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatatouilleUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		716D14082B0BD1AA00BB1DF3 /* ComicNeue-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ComicNeue-Regular.ttf"; sourceTree = "<group>"; };
+		716D140A2B0BD1D600BB1DF3 /* ComicNeue-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ComicNeue-Italic.ttf"; sourceTree = "<group>"; };
+		716D140C2B0BD1EA00BB1DF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		716D140D2B0BD4DD00BB1DF3 /* ComicNeue-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ComicNeue-BoldItalic.ttf"; sourceTree = "<group>"; };
+		716D14112B0BD7BA00BB1DF3 /* ComicNeue-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ComicNeue-Bold.ttf"; sourceTree = "<group>"; };
+		716D14122B0BD7BA00BB1DF3 /* ComicNeue-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ComicNeue-Light.ttf"; sourceTree = "<group>"; };
+		716D14132B0BD7BA00BB1DF3 /* ComicNeue-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ComicNeue-LightItalic.ttf"; sourceTree = "<group>"; };
+		716D14182B0BD92100BB1DF3 /* CustomFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFonts.swift; sourceTree = "<group>"; };
+		716D141A2B0BDF4A00BB1DF3 /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,9 +115,10 @@
 		716481842B0235110020C704 /* Ratatouille */ = {
 			isa = PBXGroup;
 			children = (
+				716D140C2B0BD1EA00BB1DF3 /* Info.plist */,
+				716D14172B0BD82600BB1DF3 /* DesignSystem */,
 				716481852B0235110020C704 /* RatatouilleApp.swift */,
 				716481872B0235110020C704 /* ContentView.swift */,
-				716481892B0235130020C704 /* Assets.xcassets */,
 				7164818E2B0235130020C704 /* Persistence.swift */,
 				716481902B0235130020C704 /* Ratatouille.xcdatamodeld */,
 				7164818B2B0235130020C704 /* Preview Content */,
@@ -131,6 +149,30 @@
 				716481A72B0235130020C704 /* RatatouilleUITestsLaunchTests.swift */,
 			);
 			path = RatatouilleUITests;
+			sourceTree = "<group>";
+		};
+		716D14072B0BD18B00BB1DF3 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				716D140D2B0BD4DD00BB1DF3 /* ComicNeue-BoldItalic.ttf */,
+				716D140A2B0BD1D600BB1DF3 /* ComicNeue-Italic.ttf */,
+				716D14082B0BD1AA00BB1DF3 /* ComicNeue-Regular.ttf */,
+				716D14112B0BD7BA00BB1DF3 /* ComicNeue-Bold.ttf */,
+				716D14122B0BD7BA00BB1DF3 /* ComicNeue-Light.ttf */,
+				716D14132B0BD7BA00BB1DF3 /* ComicNeue-LightItalic.ttf */,
+			);
+			path = Font;
+			sourceTree = "<group>";
+		};
+		716D14172B0BD82600BB1DF3 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				716481892B0235130020C704 /* Assets.xcassets */,
+				716D14072B0BD18B00BB1DF3 /* Font */,
+				716D14182B0BD92100BB1DF3 /* CustomFonts.swift */,
+				716D141A2B0BDF4A00BB1DF3 /* CustomColor.swift */,
+			);
+			path = DesignSystem;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,8 +279,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				716D14162B0BD7BA00BB1DF3 /* ComicNeue-LightItalic.ttf in Resources */,
+				716D14142B0BD7BA00BB1DF3 /* ComicNeue-Bold.ttf in Resources */,
+				716D140E2B0BD4DD00BB1DF3 /* ComicNeue-BoldItalic.ttf in Resources */,
 				7164818D2B0235130020C704 /* Preview Assets.xcassets in Resources */,
 				7164818A2B0235130020C704 /* Assets.xcassets in Resources */,
+				716D14092B0BD1AA00BB1DF3 /* ComicNeue-Regular.ttf in Resources */,
+				716D140B2B0BD1D600BB1DF3 /* ComicNeue-Italic.ttf in Resources */,
+				716D14152B0BD7BA00BB1DF3 /* ComicNeue-Light.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,6 +313,8 @@
 			files = (
 				7164818F2B0235130020C704 /* Persistence.swift in Sources */,
 				716481882B0235110020C704 /* ContentView.swift in Sources */,
+				716D141B2B0BDF4A00BB1DF3 /* CustomColor.swift in Sources */,
+				716D14192B0BD92100BB1DF3 /* CustomFonts.swift in Sources */,
 				716481922B0235130020C704 /* Ratatouille.xcdatamodeld in Sources */,
 				716481862B0235110020C704 /* RatatouilleApp.swift in Sources */,
 			);
@@ -428,6 +478,7 @@
 				DEVELOPMENT_TEAM = L2T72MFL99;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Ratatouille/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -457,6 +508,7 @@
 				DEVELOPMENT_TEAM = L2T72MFL99;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Ratatouille/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
