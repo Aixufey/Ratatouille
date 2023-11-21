@@ -25,6 +25,8 @@
 		716D14192B0BD92100BB1DF3 /* CustomFonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D14182B0BD92100BB1DF3 /* CustomFonts.swift */; };
 		716D141B2B0BDF4A00BB1DF3 /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D141A2B0BDF4A00BB1DF3 /* CustomColor.swift */; };
 		716D141D2B0BF5BC00BB1DF3 /* ImageAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D141C2B0BF5BC00BB1DF3 /* ImageAsset.swift */; };
+		716D142B2B0C01E700BB1DF3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D142A2B0C01E700BB1DF3 /* SettingsView.swift */; };
+		716D142D2B0C1BE400BB1DF3 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D142C2B0C1BE400BB1DF3 /* AppSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +69,8 @@
 		716D14182B0BD92100BB1DF3 /* CustomFonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFonts.swift; sourceTree = "<group>"; };
 		716D141A2B0BDF4A00BB1DF3 /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
 		716D141C2B0BF5BC00BB1DF3 /* ImageAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAsset.swift; sourceTree = "<group>"; };
+		716D142A2B0C01E700BB1DF3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		716D142C2B0C1BE400BB1DF3 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,11 +122,13 @@
 			isa = PBXGroup;
 			children = (
 				716D140C2B0BD1EA00BB1DF3 /* Info.plist */,
-				716D14172B0BD82600BB1DF3 /* DesignSystem */,
 				716481852B0235110020C704 /* RatatouilleApp.swift */,
 				716481872B0235110020C704 /* ContentView.swift */,
 				7164818E2B0235130020C704 /* Persistence.swift */,
+				716D142A2B0C01E700BB1DF3 /* SettingsView.swift */,
 				716481902B0235130020C704 /* Ratatouille.xcdatamodeld */,
+				716D14172B0BD82600BB1DF3 /* DesignSystem */,
+				716D142F2B0C2ABE00BB1DF3 /* View Modifiers */,
 				7164818B2B0235130020C704 /* Preview Content */,
 			);
 			path = Ratatouille;
@@ -176,6 +182,14 @@
 				716D141C2B0BF5BC00BB1DF3 /* ImageAsset.swift */,
 			);
 			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		716D142F2B0C2ABE00BB1DF3 /* View Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				716D142C2B0C1BE400BB1DF3 /* AppSettings.swift */,
+			);
+			path = "View Modifiers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -315,9 +329,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				716D141D2B0BF5BC00BB1DF3 /* ImageAsset.swift in Sources */,
+				716D142B2B0C01E700BB1DF3 /* SettingsView.swift in Sources */,
 				7164818F2B0235130020C704 /* Persistence.swift in Sources */,
 				716481882B0235110020C704 /* ContentView.swift in Sources */,
 				716D141B2B0BDF4A00BB1DF3 /* CustomColor.swift in Sources */,
+				716D142D2B0C1BE400BB1DF3 /* AppSettings.swift in Sources */,
 				716D14192B0BD92100BB1DF3 /* CustomFonts.swift in Sources */,
 				716481922B0235130020C704 /* Ratatouille.xcdatamodeld in Sources */,
 				716481862B0235110020C704 /* RatatouilleApp.swift in Sources */,
