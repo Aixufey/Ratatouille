@@ -27,6 +27,9 @@
 		716D141D2B0BF5BC00BB1DF3 /* ImageAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D141C2B0BF5BC00BB1DF3 /* ImageAsset.swift */; };
 		716D142B2B0C01E700BB1DF3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D142A2B0C01E700BB1DF3 /* SettingsView.swift */; };
 		716D142D2B0C1BE400BB1DF3 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D142C2B0C1BE400BB1DF3 /* AppSettings.swift */; };
+		716D14312B0CDFC400BB1DF3 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D14302B0CDFC400BB1DF3 /* TabBarView.swift */; };
+		716D14332B0CE3F600BB1DF3 /* RecipesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D14322B0CE3F600BB1DF3 /* RecipesListView.swift */; };
+		716D14352B0CE41800BB1DF3 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716D14342B0CE41800BB1DF3 /* SearchView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +74,9 @@
 		716D141C2B0BF5BC00BB1DF3 /* ImageAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageAsset.swift; sourceTree = "<group>"; };
 		716D142A2B0C01E700BB1DF3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		716D142C2B0C1BE400BB1DF3 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		716D14302B0CDFC400BB1DF3 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
+		716D14322B0CE3F600BB1DF3 /* RecipesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipesListView.swift; sourceTree = "<group>"; };
+		716D14342B0CE41800BB1DF3 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,10 +129,9 @@
 			children = (
 				716D140C2B0BD1EA00BB1DF3 /* Info.plist */,
 				716481852B0235110020C704 /* RatatouilleApp.swift */,
-				716481872B0235110020C704 /* ContentView.swift */,
-				7164818E2B0235130020C704 /* Persistence.swift */,
-				716D142A2B0C01E700BB1DF3 /* SettingsView.swift */,
-				716481902B0235130020C704 /* Ratatouille.xcdatamodeld */,
+				716D14372B0CE4B500BB1DF3 /* Model */,
+				716D14362B0CE42800BB1DF3 /* View */,
+				716D14382B0CE4C700BB1DF3 /* Controller */,
 				716D14172B0BD82600BB1DF3 /* DesignSystem */,
 				716D142F2B0C2ABE00BB1DF3 /* View Modifiers */,
 				7164818B2B0235130020C704 /* Preview Content */,
@@ -190,6 +195,34 @@
 				716D142C2B0C1BE400BB1DF3 /* AppSettings.swift */,
 			);
 			path = "View Modifiers";
+			sourceTree = "<group>";
+		};
+		716D14362B0CE42800BB1DF3 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				716D14302B0CDFC400BB1DF3 /* TabBarView.swift */,
+				716D14322B0CE3F600BB1DF3 /* RecipesListView.swift */,
+				716D14342B0CE41800BB1DF3 /* SearchView.swift */,
+				716D142A2B0C01E700BB1DF3 /* SettingsView.swift */,
+				716481872B0235110020C704 /* ContentView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		716D14372B0CE4B500BB1DF3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				716481902B0235130020C704 /* Ratatouille.xcdatamodeld */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		716D14382B0CE4C700BB1DF3 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7164818E2B0235130020C704 /* Persistence.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -332,10 +365,13 @@
 				716D142B2B0C01E700BB1DF3 /* SettingsView.swift in Sources */,
 				7164818F2B0235130020C704 /* Persistence.swift in Sources */,
 				716481882B0235110020C704 /* ContentView.swift in Sources */,
+				716D14352B0CE41800BB1DF3 /* SearchView.swift in Sources */,
+				716D14332B0CE3F600BB1DF3 /* RecipesListView.swift in Sources */,
 				716D141B2B0BDF4A00BB1DF3 /* CustomColor.swift in Sources */,
 				716D142D2B0C1BE400BB1DF3 /* AppSettings.swift in Sources */,
 				716D14192B0BD92100BB1DF3 /* CustomFonts.swift in Sources */,
 				716481922B0235130020C704 /* Ratatouille.xcdatamodeld in Sources */,
+				716D14312B0CDFC400BB1DF3 /* TabBarView.swift in Sources */,
 				716481862B0235110020C704 /* RatatouilleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
