@@ -16,7 +16,7 @@ struct RatatouilleApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TabBarView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .font(.custom(CustomFont.ComicBoldItalic.name, size: 20))
                 .environmentObject(settings)
