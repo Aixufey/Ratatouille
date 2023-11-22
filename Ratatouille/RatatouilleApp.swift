@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct RatatouilleApp: App {
-    // Owner of this object throughout the lifecycle.
+    // Owner of this object throughout the lifecycle - instantiate and provide as context to children
     @StateObject private var settings = AppSettings()
     
     let persistenceController = PersistenceController.shared
