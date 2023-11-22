@@ -11,50 +11,52 @@ struct ArchiveView: View {
     @EnvironmentObject var settings: AppSettings
     @State private var dummies = ["Item 1", "Item 2", "Item 3"]
     
-    private func deleteItem(at offsets: IndexSet) {
-        print("deleted")
-    }
     var body: some View {
         List {
-            Section {
-                Text("Arkiv")
-            } header: {
-                Text("Landområder")
+            Section(header: Text("Landområder")) {
+                HStack {
+                    Image(systemName: settings.isDarkMode ? "archivebox" : "archivebox.fill")
+                        .frame(width: 30, alignment: .center)
+                    Text("Arkiv")
+                }.foregroundColor(.blue)
             }
             
-            Section {
-                Text("Ingen arkiverte kategorier")
-            } header: {
-                Text("Kategorier")
+            Section(header: Text("Kategorier")) {
+                HStack {
+                    Image(systemName: settings.isDarkMode ? "doc.plaintext" : "doc.plaintext.fill")
+                        .frame(width: 30, alignment: .center)
+                    Text("Ingen arkiverte kategorier")
+                }.foregroundColor(.blue)
             }
             
-            Section {
-                ForEach(dummies, id: \.self) { dummy in
-                    Text(dummy)
-                        .swipeActions(edge: .trailing) {
-                            Button {
-                                
-                            } label: {
-                                Image(systemName: "trash")
-                
-                            }.tint(.red)
-                            Button {
-                                
-                            } label: {
-                                Image(systemName: settings.isDarkMode ? "tray.and.arrow.up.fill" : "tray.and.arrow.up")
+            Section(header: Text("Ingredienser")) {
+                if !dummies.isEmpty {
+                    ForEach(dummies.indices, id: \.self) { index in
+                        Text(dummies[index])
+                            .swipeActions(edge: .trailing) {
+                                Button {
+                                    deleteItem(at: index)
+                                } label: {
+                                    Image(systemName: "trash")
+                                    
+                                }.tint(.red)
+                                Button {
+                                    restoreItem(for: dummies[index])
+                                } label: {
+                                    Image(systemName: settings.isDarkMode ? "tray.and.arrow.up.fill" : "tray.and.arrow.up")
+                                }
                             }
-                            
-                        }
+                    }
+                } else {
+                    HStack {
+                        Image(systemName: settings.isDarkMode ? "carrot" : "carrot.fill")
+                            .frame(width: 30, alignment: .center)
+                        Text("Ingen arkiverte ingredienser")
+                    }.foregroundColor(.blue)
                 }
-                .onDelete(perform: deleteItem)
-                
-                    
-            } header: {
-                Text("Kategorier")
             }
             
-            
-            Section {
+            Section(header: Text("Matoppskrifter")) {
                 Button {
                     
                 } label: {
@@ -62,18 +64,20 @@ struct ArchiveView: View {
                         Image(systemName: settings.isDarkMode ? "fork.knife.circle" : "fork.knife.circle.fill")
                             .frame(width: 30, alignment: .center)
                         Text("Ingen arkiverte matoppskrifter")
-                    }
-                }
-            } header: {
-                HStack {
-                    Text("Matoppskrifter")
+                    }.foregroundColor(.blue)
                 }
             }
-        }
+        }// List
         .navigationTitle("Arkiv")
-        .toolbar {
-            EditButton()
-        }
+    }
+    
+    private func deleteItem(at index: Int) {
+        dummies.remove(at: index)
+        print("deleted")
+    }
+    private func restoreItem(for item: String) {
+        dummies.append(item)
+        print("restore")
     }
 }
 
