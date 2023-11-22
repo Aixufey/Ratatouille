@@ -11,59 +11,93 @@ import SwiftUI
 struct SettingsView: View {
     // Accessing instance of StateObject
     @EnvironmentObject private var settings: AppSettings
+
     
     var body: some View {
         
         NavigationView {
             List {
+                // Miscellaneous
                 Section {
-                    HStack {
-                        Image(systemName: settings.isDarkMode ? "globe.central.south.asia" : "globe.central.south.asia.fill")
-                        Button {
-                            
-                        } label: {
+                    Button {
+                    } label: {
+                        HStack {
+                            Image(systemName: settings.isDarkMode ? "globe.central.south.asia" : "globe.central.south.asia.fill")
+                                .frame(width:30, alignment: .center)
                             Text("Redigere landområder")
                         }
                     }
-                    HStack {
-                        Image(systemName: settings.isDarkMode ? "doc.plaintext" : "doc.plaintext.fill")
-                        Button {
-                            
+                    .background(
+                        NavigationLink {
+                            LandAreasView()
                         } label: {
+                            EmptyView()
+                            // Hack to hide indications ">" lol
+                        }.opacity(0)
+                    )
+                    Button {
+                    } label: {
+                        HStack {
+                            Image(systemName: settings.isDarkMode ? "doc.plaintext" : "doc.plaintext.fill")
+                                .frame(width: 30, alignment: .center)
                             Text("Redigere kategorier")
                         }
                     }
-                    HStack {
-                        Image(systemName: settings.isDarkMode ? "carrot" : "carrot.fill")
-                        Button {
-                            
+                    .background(
+                        NavigationLink {
+                            CategoriesView()
                         } label: {
+                            EmptyView()
+                        }.opacity(0)
+                    )
+                    Button {
+                    } label: {
+                        HStack {
+                            Image(systemName: settings.isDarkMode ? "carrot" : "carrot.fill")
+                                .frame(width: 30, alignment: .center)
                             Text("Redigere ingredienser")
                         }
                     }
+                    .background(
+                        NavigationLink {
+                            IngredientsView()
+                        } label: {
+                            EmptyView()
+                        }.opacity(0)
+                    )
                 }
-                .imageScale(.large)
+                // Dark mode
                 Section {
                     HStack {
                         Image(systemName: settings.isDarkMode ? "moon.stars.fill" : "sun.max.fill")
+                            .frame(width: 30, alignment: .center)
                         Toggle(isOn: $settings.isDarkMode) {
                             Text("Dark mode")
                         }
                     }
                 }
+                // Administration
                 Section {
-                    HStack {
-                        Image(systemName: settings.isDarkMode ? "archivebox" : "archivebox.fill")
-                        Button {
-                            
-                        } label: {
+                    Button {
+                    } label: {
+                        HStack {
+                            Image(systemName: settings.isDarkMode ? "archivebox" : "archivebox.fill")
+                                .frame(width: 30, alignment: .center)
                             Text("Administrere arkiv")
+                            
                         }
-
                     }
+                    .background(
+                        NavigationLink {
+                            ArchiveView()
+                        } label: {
+                            EmptyView()
+                        }.opacity(0)
+                    )
                 }
             } // List
             .navigationTitle("Innstillinger")
+            .imageScale(.large)
         } // NavView
         .preferredColorScheme(settings.isDarkMode ? .dark : .light)
     }
