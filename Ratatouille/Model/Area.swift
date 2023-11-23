@@ -7,15 +7,25 @@
 
 import Foundation
 
-struct Area: Identifiable, Codable, NameProvider {
-    var id: UUID = UUID()
-    var area: String
-    var getField: String { area }
+struct Area: Codable {
+    var meals: [AreaItems]?
+}
+
+// May Decode specific Area or All Areas
+struct AreaItems: Hashable, Codable, NameProvider {
+    var getField: String {
+        strArea ?? ""
+    }
+    var strArea: String?
+    
+    var idMeal: String?
+    var strMeal: String?
+    var strMealThumb: String?
 }
 
 extension Area {
     static let dummy = [
-        Area.init(area: "American"),
-        Area.init(area: "British")
+        AreaItems(strArea: "American"),
+        AreaItems(strArea: "Jamaican"),
     ]
 }

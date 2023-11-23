@@ -7,23 +7,26 @@
 
 import Foundation
 
-//struct Category: Identifiable, Codable, NameProvider {
-//    var id: UUID = UUID()
-//    var category: String
-//    var getField: String { category }
-//}
-//
-//extension Category {
-//    static let dummy = [
-//        Category.init(category: "italiano"),
-//        Category.init(category: "seafood"),
-//    ]
-//}
+// May serialise neither protocls
 struct Category: Codable {
-    var categories: [Items]?
+    var meals: [CategoryItems]?
+    var categories: [AllCategories]?
+}
+// Specific category
+struct CategoryItems: Identifiable, Codable, NameProvider {
+    var id: String {
+        idMeal
+    }
+    var getField: String {
+        strMeal
+    }
+    var idMeal: String
+    var strMeal: String
+    var strMealThumb: String?
 }
 
-struct Items: Identifiable, Codable, NameProvider {
+// All categories version with pic?
+struct AllCategories: Identifiable, Codable, NameProvider {
     var id: String {
         idCategory
     }
@@ -38,7 +41,7 @@ struct Items: Identifiable, Codable, NameProvider {
 
 extension Category {
     static let dummy = [
-        Items(idCategory: "1", strCategory: "italiano"),
-        Items(idCategory: "2", strCategory: "seafood"),
+        AllCategories(idCategory: "1" ,strCategory: "italiano"),
+        AllCategories(idCategory: "2" ,strCategory: "seafood"),
     ]
 }

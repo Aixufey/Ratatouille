@@ -20,6 +20,7 @@ struct MealItems: Codable {
     var strMealThumb: String
     var strYoutube: String
     var ingredients: [String?]
+    // var strIngredient1.....20 is also possible but whatever works i guess..
     
     // JSON map keys for mealItems according to the model
     private enum CodingKeys: String, CodingKey {
@@ -70,7 +71,7 @@ struct MealItems: Codable {
 }
 
 
-struct Ingredients: Codable {
+private struct Ingredients: Codable {
     private var ingredients: [String?]
     // Json map keys read ingredients 1 .. 20
     private enum CodingKeys: String, CodingKey {

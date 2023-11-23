@@ -7,16 +7,26 @@
 
 import Foundation
 
-struct Ingredient: Identifiable, Codable, NameProvider {
-    var id: UUID = UUID()
-    var ingredient: String
-    var description: String = ""
-    var getField: String { ingredient }
+struct Ingredient: Codable {
+    var meals: [IngredientItems]?
+}
+
+// Specific Ingredient or All Ingredients
+struct IngredientItems: Hashable, Codable, NameProvider {
+    var getField: String {
+        strIngredient ?? ""
+    }
+    var idIngredient: String?
+    var strIngredient: String?
+    
+    var idMeal: String?
+    var strMeal: String?
+    var strMealThumb: String?
 }
 
 extension Ingredient {
     static let dummy = [
-        Ingredient.init(ingredient: "پسته"),
-        Ingredient.init(ingredient: "زعفران"),
+        IngredientItems(strIngredient: "پسته"),
+        IngredientItems(strIngredient: "زعفران")
     ]
 }

@@ -14,6 +14,8 @@ struct SearchView: View {
     @State private var currentError: APIService.Errors?
     @State var meals: Meal?
     @State var categories: Category?
+    @State var ingredients: Ingredient?
+    @State var areas: Area?
     // Dependency injection
     private let API: APIService
     init(_ _API: APIService = APIService.shared) {
@@ -32,7 +34,7 @@ struct SearchView: View {
                     }
                     Task {
                         do {
-                            let meal: Meal = try await API.fetchWith(endpoint: .name, input: query)
+                            let meal: Meal = try await API.fetchWith(endpoint: .byName, input: query)
 
                             self.meals = meal
                         } catch {
@@ -48,7 +50,8 @@ struct SearchView: View {
                 Button {
                     Task {
                         do {
-                            let cat: Category = try await API.fetchWith(endpoint: .category, input: query)
+                            let cat: Category = try await API.fetchWith(endpoint: .allCategories, input: "Vegetarian")
+                            Help.consoleLog(cat ?? "")
                             self.categories = cat
                         } catch {
                             
@@ -56,6 +59,27 @@ struct SearchView: View {
                     }
                 } label: {
                     Text("Category")
+                }
+                Button {
+                    Task {
+                        do {
+                            let ing: Ingredient = try await API.fetchWith(endpoint: .byIngredient, input: "saffron")
+                            Help.consoleLog(ing.meals?.first ?? "")
+                            self.ingredients
+                        }
+                    }
+                } label: {
+                    Text("Ingredients")
+                }
+                Button {
+                    Task {
+                        do {
+                            let area: Area = try await API.fetchWith(endpoint: .byArea, input: query)
+                            Help.consoleLog(area ?? "")
+                        }
+                    }
+                } label: {
+                    Text("Get areas")
                 }
                 if let mealsArray = meals?.meals {
                     List(mealsArray, id: \.idMeal) { obj in
