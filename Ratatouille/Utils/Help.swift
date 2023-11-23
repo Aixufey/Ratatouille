@@ -14,4 +14,8 @@ class Help {
         }
         return String(firstChar).capitalized
     }
+    
+    static func consoleLog(_ input: Any) {
+        print(input)
+    }
 }
