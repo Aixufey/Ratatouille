@@ -38,7 +38,7 @@ struct SettingsRowView<T: NameProvider>: View {
 
 struct SettingsRowView_Previews: PreviewProvider {
     static var previews: some View {
-        let dummy = Items(idCategory: "1", strCategory: "example")
+        let dummy = AllCategories(idCategory: "1", strCategory: "example")
         SettingsRowView(for: dummy).environmentObject(AppSettings().self)
     }
 }

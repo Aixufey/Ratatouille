@@ -15,19 +15,31 @@ struct APIService {
     
     // Endpoints
     enum Types: String {
-        case name = "name"
-        case area = "area"
-        case category = "category"
+        case byName
+        case byCategory
+        case byArea
+        case byIngredient
+        case allAreas
+        case allIngredients
+        case allCategories
         func constructUrl(with value: String) throws -> String{
             let base = "https://www.themealdb.com/api/json/v1/1/"
             let endpoint: String
             let query = value.lowercased().trimmingCharacters(in: .whitespaces).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
             switch self {
-            case .name:
+            case .byName:
                 endpoint = "search.php?s="
-            case .area:
+            case .byCategory:
+                endpoint = "filter.php?c="
+            case .byArea:
                 endpoint = "filter.php?a="
-            case .category:
+            case .byIngredient:
+                endpoint = "filter.php?i="
+            case .allAreas:
+                return "\(base)list.php?a=list"
+            case .allIngredients:
+                return "\(base)list.php?i=list"
+            case .allCategories:
                 return "\(base)categories.php"
             }
             if query.isEmpty {
@@ -60,18 +72,18 @@ struct APIService {
     // Generic type is inferred by context in Swift. When called, explicit state the return type i.e. let meal: Meal
     func fetchWith<T: Codable>(endpoint: Types, input value: String) async throws -> T {
         let request = try endpoint.constructUrl(with: value)
+        //print(request)
         guard let url = URL(string: request) else {
             throw Errors.statusCode(400)
         }
-        print(request)
+        //print(request)
         let (data, resp) = try await URLSession.shared.data(from: url)
         if let statusCode = (resp as? HTTPURLResponse)?.statusCode,
            statusCode != 200 {
             throw Errors.statusCode(statusCode)
         }
-        
+        print(data)
         do {
-            print("here?")
             let decoded = try JSONDecoder().decode(T.self, from: data)
             print(decoded)
             return decoded
