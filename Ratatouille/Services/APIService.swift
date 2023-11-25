@@ -22,10 +22,11 @@ struct APIService {
         case allAreas
         case allIngredients
         case allCategories
-        func constructUrl(with value: String) throws -> String{
+        func constructUrl(with value: String) async throws -> String{
             let base = "https://www.themealdb.com/api/json/v1/1/"
             let endpoint: String
             let query = value.lowercased().trimmingCharacters(in: .whitespaces).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            //print("builder url: \(query)")
             switch self {
             case .byName:
                 endpoint = "search.php?s="
@@ -56,6 +57,7 @@ struct APIService {
         case errorMessage(String)
         case unknown(underlying: Error)
         
+        // Functions can decide which error to throw and caller may catch the specific thrown error
         var errorMessage: String {
             switch self {
             case .emptyQuery:
@@ -71,18 +73,19 @@ struct APIService {
     }
     // Generic type is inferred by context in Swift. When called, explicit state the return type i.e. let meal: Meal
     func fetchWith<T: Codable>(endpoint: Types, input value: String) async throws -> T {
-        let request = try endpoint.constructUrl(with: value)
+        //print("fetch \(value)")
+        let request = try await endpoint.constructUrl(with: value)
         //print(request)
         guard let url = URL(string: request) else {
             throw Errors.statusCode(400)
         }
-        //print(request)
+        //print(url)
         let (data, resp) = try await URLSession.shared.data(from: url)
         if let statusCode = (resp as? HTTPURLResponse)?.statusCode,
            statusCode != 200 {
             throw Errors.statusCode(statusCode)
         }
-        print(data)
+        //print(data)
         do {
             let decoded = try JSONDecoder().decode(T.self, from: data)
             print(decoded)

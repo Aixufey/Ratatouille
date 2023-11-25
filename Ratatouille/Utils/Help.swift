@@ -18,4 +18,11 @@ class Help {
     static func consoleLog(_ input: Any) {
         print(input)
     }
+    
+    static func sanitize(this input: String) throws -> String{
+        guard !input.isEmpty else {
+            throw APIService.Errors.emptyQuery
+        }
+        return input.lowercased().trimmingCharacters(in: .whitespaces)
+    }
 }
