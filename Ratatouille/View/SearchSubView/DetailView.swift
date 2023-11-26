@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import Kingfisher
 /**
  Observe id and transform accordingly
  */
@@ -25,15 +25,15 @@ struct DetailView: View {
     var body: some View {
         LazyVStack {
             if let details = usingModel.itemDetails[forId]?.meals?.first {
-                AsyncImage(url: URL(string: details.strMealThumb)) {
-                    $0.image?
-                        .resizable()
-                        .scaledToFit()
-                        .clipShape(Circle())
-                        .frame(width: 250, height: 250)
-                        .overlay(Circle().stroke(Color.customPrimary, lineWidth: 4))
-                }
-                .padding()
+                KFImage(URL(string: details.strMealThumb))
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(Circle())
+                    .frame(width: 250, height: 250)
+                    .overlay(Circle().stroke(Color.customPrimary, lineWidth: 4))
+                    .padding()
+                    .padding(.top)
+                
                 Text(details.strMeal)
                     .font(.custom(CustomFont.ComicRegular.name, size: 30))
                 Divider().padding()
@@ -73,6 +73,7 @@ struct DetailView: View {
                         }
                     } // sect 2
                     .padding()
+                    .padding(.bottom)
                 }
             } else {
                 ProgressView()

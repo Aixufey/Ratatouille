@@ -6,17 +6,17 @@
 //
 
 import SwiftUI
-
+import Kingfisher
 /**
  Subscribing to 'DVModel' and pass in id to fetch more details for each item
  */
 struct SearchResultView: View {
     @Binding var unifiedResult: UnifiedModel
     @StateObject private var DVModel = DetailViewModel()
+    private let fallBackImg: String = "https://cdn-icons-png.flaticon.com/512/2276/2276931.png"
     init(currentSearchResult unifiedResult: Binding<UnifiedModel>) {
         self._unifiedResult = unifiedResult
     }
-    
     var body: some View {
         VStack {
             Text("Søk")
@@ -28,21 +28,19 @@ struct SearchResultView: View {
                             ForEach(areas, id: \.idMeal) { area in
                                 NavigationLink {
                                     ScrollView {
-                                        AsyncImage(url: URL(string: area.strMealThumb ?? "")) { i in
-                                            i.image?
-                                                .resizable()
-                                                .scaledToFit()
-                                                .clipShape(Circle())
-                                                .frame(width: 250, height: 250)
-                                                .overlay(Circle().stroke(Color.customPrimary, lineWidth: 4))
-                                        }
-                                        Text(area.strMeal ?? "")
-                                            .font(.custom(CustomFont.ComicRegular.name, size: 30))
-                                        Divider().padding()
                                         DetailView(forId: area.idMeal ?? "", usingModel: DVModel, with: $unifiedResult)
                                     }
                                 } label: {
-                                    Text(area.strMeal ?? "")
+                                    LazyHStack {
+                                        KFImage(URL(string: area.strMealThumb ?? fallBackImg))
+                                            .resizable()
+                                            .scaledToFit()
+                                            .clipShape(Circle())
+                                            .frame(width: 85, height: 85)
+                                            .overlay(Circle().stroke(Color.customPrimary, lineWidth: 4))
+                                        Text(area.strMeal ?? "")
+                                            .padding(.leading)
+                                    }
                                 }
                             }
                         }
