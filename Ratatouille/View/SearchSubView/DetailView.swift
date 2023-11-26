@@ -11,19 +11,37 @@ import SwiftUI
  Observe id and transform accordingly
  */
 struct DetailView: View {
-    var forId: String
     @ObservedObject var usingModel: DetailViewModel
+    @Binding private var currentItem: UnifiedModel
     @State private var isInstruction: Bool = false
     @State private var isIngredient: Bool = false
-
+    private var forId: String
+    init(forId: String, usingModel: DetailViewModel, with: Binding<UnifiedModel>) {
+        self.forId = forId
+        self.usingModel = usingModel
+        self._currentItem = with
+    }
+    
     var body: some View {
-        VStack {
+        LazyVStack {
             if let details = usingModel.itemDetails[forId]?.meals?.first {
-                List {
-                    LazyHStack {
-                        Text("Meal ID \(details.idMeal) - \(details.strArea)")
-                    }
-                    Section(header: HStack {
+                AsyncImage(url: URL(string: details.strMealThumb)) {
+                    $0.image?
+                        .resizable()
+                        .scaledToFit()
+                        .clipShape(Circle())
+                        .frame(width: 250, height: 250)
+                        .overlay(Circle().stroke(Color.customPrimary, lineWidth: 4))
+                }
+                .padding()
+                Text(details.strMeal)
+                    .font(.custom(CustomFont.ComicRegular.name, size: 30))
+                Divider().padding()
+                Text("Meal ID \(details.idMeal) - \(details.strArea)")
+                    .padding()
+                Divider().padding()
+                LazyVStack {
+                    Section(header: LazyHStack {
                         Text("Instructions")
                         Image(systemName: "\(isInstruction ? "arrow.down.forward.and.arrow.up.backward":"arrow.up.backward.and.arrow.down.forward")")
                     }.onTapGesture {
@@ -33,9 +51,13 @@ struct DetailView: View {
                     }) {
                         if isInstruction {
                             Text(details.strInstructions)
+                                .padding()
+                                .padding(.horizontal)
                         }
-                    }
-                    Section(header: HStack {
+                    } // sect 1
+                    .padding()
+                    Divider().padding()
+                    Section(header: LazyHStack {
                         Text("Ingredients")
                         Image(systemName: "\(isIngredient ? "arrow.down.forward.and.arrow.up.backward":"arrow.up.backward.and.arrow.down.forward")")
                     }.onTapGesture {
@@ -46,14 +68,19 @@ struct DetailView: View {
                         if isIngredient {
                             ForEach(details.ingredients, id: \.self) {
                                 Text($0 ?? "")
+                                    .padding(.top)
                             }
                         }
-                    }
+                    } // sect 2
+                    .padding()
                 }
             } else {
                 ProgressView()
             }
-        }
+        } // lazy Vstack
+        .padding(.horizontal)
+        .background(Color(.systemGray6))
+        .cornerRadius(25)
         .onAppear {
             Task {
                 print("ID inside DV: \(forId)")
@@ -64,9 +91,10 @@ struct DetailView: View {
 }
 
 struct DetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        // Create a Meal instance containing the sample MealItems
-        let dummyMealItem = MealItems(
+    struct Wrapper: View {
+        @State private var unified = UnifiedModel(
+            meal: Meal(meals: [
+                MealItems(
                     idMeal: "52834",
                     strMeal: "Beef stroganoff",
                     strCategory: "Beef",
@@ -76,7 +104,14 @@ struct DetailView_Previews: PreviewProvider {
                     strYoutube: "https://www.youtube.com/watch?v=PQHgQX1Ss74",
                     ingredients: ["Olive Oil", "Onions"]
                 )
-        let dummy = Meal(meals: [dummyMealItem])
-        DetailView(forId: dummyMealItem.idMeal, usingModel: DetailViewModel())
+            ])
+        )
+        var body: some View {
+            DetailView(forId: unified.meal?.meals?.first?.idMeal ?? "", usingModel: DetailViewModel(), with: $unified)
+        }
+        
+    }
+    static var previews: some View {
+        Wrapper()
     }
 }
