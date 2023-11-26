@@ -17,6 +17,7 @@
 		71492A012B0D5ACC00074617 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71492A002B0D5ACC00074617 /* Category.swift */; };
 		71492A032B0D632D00074617 /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71492A022B0D632D00074617 /* Ingredient.swift */; };
 		71492A052B0D644F00074617 /* Area.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71492A042B0D644F00074617 /* Area.swift */; };
+		7150B1FC2B14045A00526B60 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 7150B1FB2B14045A00526B60 /* Kingfisher */; };
 		716481862B0235110020C704 /* RatatouilleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716481852B0235110020C704 /* RatatouilleApp.swift */; };
 		716481882B0235110020C704 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716481872B0235110020C704 /* ContentView.swift */; };
 		7164818A2B0235130020C704 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 716481892B0235130020C704 /* Assets.xcassets */; };
@@ -116,6 +117,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7150B1FC2B14045A00526B60 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,6 +323,9 @@
 			dependencies = (
 			);
 			name = Ratatouille;
+			packageProductDependencies = (
+				7150B1FB2B14045A00526B60 /* Kingfisher */,
+			);
 			productName = Ratatouille;
 			productReference = 716481822B0235110020C704 /* Ratatouille.app */;
 			productType = "com.apple.product-type.application";
@@ -393,6 +398,9 @@
 				Base,
 			);
 			mainGroup = 716481792B0235110020C704;
+			packageReferences = (
+				7150B1FA2B14045A00526B60 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			productRefGroup = 716481832B0235110020C704 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -791,6 +799,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7150B1FA2B14045A00526B60 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7150B1FB2B14045A00526B60 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7150B1FA2B14045A00526B60 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		716481902B0235130020C704 /* Ratatouille.xcdatamodeld */ = {
