@@ -101,7 +101,8 @@ struct SearchView: View {
             .cornerRadius(10)
             Spacer()
             
-            SearchResultView($unifiedResult)
+            // Pass the binding generic protocol
+            SearchResultView(currentSearchResult: $unifiedResult)
             
             Spacer()
         } // VStack - Container
@@ -120,6 +121,7 @@ struct SearchView: View {
     }
 }
 
+// All Model can conform to this protocol  for callback the generic result type
 protocol SearchResult: Codable {}
 private struct SheetView: View {
     @EnvironmentObject var settings: AppSettings
