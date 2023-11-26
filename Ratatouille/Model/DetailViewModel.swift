@@ -20,7 +20,10 @@ class DetailViewModel: ObservableObject {
         do {
             // JSON are serialized as Meal Model
             let mealItems: Meal = try await API.fetchWith(endpoint: .byId, input: idMeal)
-            self.itemDetails[idMeal] = mealItems
+            DispatchQueue.main.async {
+                // Published is always on Main Thread for async
+                self.itemDetails[idMeal] = mealItems
+            }
         } catch {
             print("Error getting details for \(idMeal)")
         }
