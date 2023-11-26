@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Area: Codable {
+struct Area: Codable, SearchResult {
     var meals: [AreaItems]?
 }
 
