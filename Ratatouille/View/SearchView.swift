@@ -44,18 +44,31 @@ struct SearchView: View {
     @State private var isShowingSheet: Bool = false
     @State private var isAlert: Bool = false
     @State private var currentError: APIService.Errors?
-    @State private var currentEndpoint: APIService.Types
+    @State private var currentEndpoint: APIService.Types = .byName
     @State private var currentItem: SheetItem = .ByArea
     @State private var currentTitle: String = ""
-    @State var meals: Meal?
-    @State var categories: Category?
-    @State var ingredients: Ingredient?
-    @State var areas: Area?
+    @State private var currentSearchResult: SearchResult?
+    @State private var unifiedResult = UnifiedModel()
     // Dependency injection
-    private let API: APIService
-    init(_ _API: APIService = APIService.shared, _ endpoint: APIService.Types = APIService.Types.byName) {
+    private var API: APIService
+    init(_ _API: APIService = APIService.shared) {
         self.API = _API
-        self.currentEndpoint = endpoint
+    }
+    
+    private func handleResult(_ result: SearchResult) {
+        self.currentSearchResult = result
+        //print(currentSearchResult ?? "")
+        switch result {
+        case let area as Area:
+            unifiedResult = UnifiedModel(area: area)
+        case let meal as Meal:
+            unifiedResult = UnifiedModel(meal: meal)
+        case let cat as Category:
+            unifiedResult = UnifiedModel(category: cat)
+        case let ing as Ingredient:
+            unifiedResult = UnifiedModel(ingredient: ing)
+        default: break
+        }
     }
     
     var body: some View {
@@ -88,11 +101,7 @@ struct SearchView: View {
             .cornerRadius(10)
             Spacer()
             
-            VStack {
-                Form {
-                    
-                }
-            } // VStack - content
+            SearchResultView($unifiedResult)
             
             Spacer()
         } // VStack - Container
@@ -100,98 +109,18 @@ struct SearchView: View {
             SheetView(
                 $currentTitle,
                 $isShowingSheet,
-                $currentEndpoint
+                $currentEndpoint,
+                callback: {
+                    // escaped here
+                    self.handleResult($0)
+                }
             )
             .environmentObject(settings)
         }
-        
-        
-        //        VStack {
-        //            Form {
-        //                Text("Search View")
-        //                TextField("Search name", text: $query)
-        //                Button {
-        //                    guard !query.isEmpty else {
-        //                        currentError = .emptyQuery
-        //                        return isAlert.toggle()
-        //                    }
-        //                    Task {
-        //                        do {
-        //                            let meal: Meal = try await API.fetchWith(endpoint: .byName, input: query)
-        //
-        //                            self.meals = meal
-        //                        } catch {
-        //                            // Specific error is decided from Service
-        //                            currentError = .unknown(underlying: error)
-        //                            return isAlert.toggle()
-        //                        }
-        //                        query = ""
-        //                    }
-        //                } label: {
-        //                    Text("Search")
-        //                }
-        //                Button {
-        //                    Task {
-        //                        do {
-        //                            let cat: Category = try await API.fetchWith(endpoint: .allCategories, input: "Vegetarian")
-        //                            Help.consoleLog(cat ?? "")
-        //                            self.categories = cat
-        //                        } catch {
-        //
-        //                        }
-        //                    }
-        //                } label: {
-        //                    Text("Category")
-        //                }
-        //                Button {
-        //                    Task {
-        //                        do {
-        //                            let ing: Ingredient = try await API.fetchWith(endpoint: .byIngredient, input: "saffron")
-        //                            Help.consoleLog(ing.meals?.first ?? "")
-        //                            self.ingredients
-        //                        }
-        //                    }
-        //                } label: {
-        //                    Text("Ingredients")
-        //                }
-        //                Button {
-        //                    Task {
-        //                        do {
-        //                            let area: Area = try await API.fetchWith(endpoint: .byArea, input: query)
-        //                            Help.consoleLog(area ?? "")
-        //                        }
-        //                    }
-        //                } label: {
-        //                    Text("Get areas")
-        //                }
-        //                if let mealsArray = meals?.meals {
-        //                    List(mealsArray, id: \.idMeal) { obj in
-        //                        VStack(alignment: .leading) {
-        //                            Text(obj.strMeal)
-        //                        }
-        //                    }
-        //                }
-        //                if let catArr = categories?.categories {
-        //
-        //                    List(catArr, id: \.idCategory) { obj in
-        //                        VStack(alignment: .leading) {
-        //                            Text(obj.strCategory)
-        //                        }
-        //                    }
-        //                }
-        //            } // form
-        //            .autocorrectionDisabled(true)
-        //        }// VStack
-        //        .alert("Error!", isPresented: $isAlert) {
-        //            Button("OK") {
-        //                isAlert.toggle()
-        //            }
-        //        } message: {
-        //            Text(currentError?.errorMessage ?? "")
-        //        }
     }
 }
 
+protocol SearchResult: Codable {}
 private struct SheetView: View {
     @EnvironmentObject var settings: AppSettings
     @Binding private var isShowing: Bool // States auto wired by Parent
@@ -201,11 +130,14 @@ private struct SheetView: View {
     @State private var query: String = ""
     @State private var isAlert: Bool = false
     private let API: APIService
-    init(_ title: Binding<String>, _ isShowing: Binding<Bool>, _ endpoint: Binding<APIService.Types>,_ _API: APIService = APIService.shared) {
+    private let onEscape: (SearchResult) -> Void
+    // @escaping literally means outlives the lifecycle of this View for callbacks ....................💀
+    init(_ title: Binding<String>, _ isShowing: Binding<Bool>, _ endpoint: Binding<APIService.Types>, _ _API: APIService = APIService.shared, callback callBack: @escaping (SearchResult) -> Void) {
         self._title = title
         self._isShowing = isShowing
         self._endpoint = endpoint
         self.API = _API
+        self.onEscape = callBack
     }
     
     var body: some View {
@@ -227,18 +159,28 @@ private struct SheetView: View {
                             switch endpoint {
                             case .byName:
                                 let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                onEscape(result as Meal)
                             case .byCategory:
                                 let result: Category = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                onEscape(result as Category)
                             case .byArea:
                                 let result: Area = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                onEscape(result as Area)
                             case .byIngredient:
                                 let result: Ingredient = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                onEscape(result as Ingredient)
+                            case .byId:
+                                let result: Meal = try await API.fetchWith(endpoint: .byId, input: sanitizedQuery)
+                                onEscape(result as Meal)
                             case .allAreas:
                                 let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                onEscape(result)
                             case .allIngredients:
                                 let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                onEscape(result)
                             case .allCategories:
                                 let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                onEscape(result)
                             }
                         } catch {
                             currentError = .unknown(underlying: error)
@@ -252,7 +194,7 @@ private struct SheetView: View {
                 } label: {
                     Text("Søk")
                 }
-            }
+            } // HStack nav
             .padding()
             .padding(EdgeInsets(top: 20, leading: 5, bottom: 5, trailing: 5))
             Spacer()
@@ -275,7 +217,7 @@ private struct SheetView: View {
                     .stroke(Color.gray, lineWidth: 2)
             )
             .padding(.bottom, 15)
-        }
+        }// VStack
         .presentationDetents([.fraction(0.3)])
         .alert("Error!", isPresented: $isAlert) {
             Button("OK") {}
@@ -298,7 +240,9 @@ struct SheetView_Previews: PreviewProvider {
         @State private var title = "Test"
         @State private var endpoint = APIService.Types.byName
         var body: some View {
-            SheetView($title, $isShowing, $endpoint)
+            SheetView($title, $isShowing, $endpoint) {result in
+                
+            }
         }
     }
     static var previews: some View {
@@ -306,3 +250,4 @@ struct SheetView_Previews: PreviewProvider {
             .environmentObject(AppSettings().self)
     }
 }
+

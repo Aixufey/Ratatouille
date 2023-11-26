@@ -19,6 +19,7 @@ struct APIService {
         case byCategory
         case byArea
         case byIngredient
+        case byId
         case allAreas
         case allIngredients
         case allCategories
@@ -36,6 +37,8 @@ struct APIService {
                 endpoint = "filter.php?a="
             case .byIngredient:
                 endpoint = "filter.php?i="
+            case .byId:
+                endpoint = "lookup.php?i="
             case .allAreas:
                 return "\(base)list.php?a=list"
             case .allIngredients:
@@ -79,7 +82,7 @@ struct APIService {
         guard let url = URL(string: request) else {
             throw Errors.statusCode(400)
         }
-        //print(url)
+        print(url)
         let (data, resp) = try await URLSession.shared.data(from: url)
         if let statusCode = (resp as? HTTPURLResponse)?.statusCode,
            statusCode != 200 {
@@ -88,7 +91,7 @@ struct APIService {
         //print(data)
         do {
             let decoded = try JSONDecoder().decode(T.self, from: data)
-            print(decoded)
+            //print(decoded)
             return decoded
         } catch {
             throw Errors.unknown(underlying: error)
