@@ -8,7 +8,7 @@
 import Foundation
 
 // May serialise neither protocls
-struct Category: Codable {
+struct Category: Codable, SearchResult {
     var meals: [CategoryItems]?
     var categories: [AllCategories]?
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Ingredient: Codable {
+struct Ingredient: Codable, SearchResult {
     var meals: [IngredientItems]?
 }
 
