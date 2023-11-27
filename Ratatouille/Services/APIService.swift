@@ -14,15 +14,12 @@ struct APIService {
     private init() {}
     
     // Endpoints
-    enum Types: String {
+    enum EndpointTypes: String {
         case byName
         case byCategory
         case byArea
         case byIngredient
         case byId
-        case allAreas
-        case allIngredients
-        case allCategories
         func constructUrl(with value: String) async throws -> String{
             let base = "https://www.themealdb.com/api/json/v1/1/"
             let endpoint: String
@@ -39,17 +36,33 @@ struct APIService {
                 endpoint = "filter.php?i="
             case .byId:
                 endpoint = "lookup.php?i="
-            case .allAreas:
-                return "\(base)list.php?a=list"
-            case .allIngredients:
-                return "\(base)list.php?i=list"
-            case .allCategories:
-                return "\(base)categories.php"
             }
             if query.isEmpty {
                 throw Errors.emptyQuery
             }
             return "\(base)\(endpoint)\(query)"
+        }
+    }
+    enum ListEndpoints: String {
+        case allAreas
+        case allIngredients
+        case allCategories
+        case randomMeal
+        func constructUrl() async -> String {
+            let base = "https://www.themealdb.com/api/json/v1/1/"
+            let endpoint: String
+            switch self {
+            case .allAreas:
+                endpoint = "list.php?a=list"
+            case .allCategories:
+                endpoint = "categories.php"
+            case .allIngredients:
+                endpoint = "list.php?i=list"
+            case .randomMeal:
+                endpoint = "random.php"
+            }
+            //print("list endpoint \(base)\(endpoint)")
+            return "\(base)\(endpoint)"
         }
     }
     
@@ -74,8 +87,33 @@ struct APIService {
             }
         }
     }
-    // Generic type is inferred by context in Swift. When called, explicit state the return type i.e. let meal: Meal
-    func fetchWith<T: Codable>(endpoint: Types, input value: String) async throws -> T {
+    /**
+     Fetching all areas, categories, ingredients
+     */
+    func fetchList<T: Codable>(endpoint: ListEndpoints) async throws -> T {
+        let request = await endpoint.constructUrl()
+        guard let url = URL(string: request) else {
+            throw Errors.statusCode(400)
+        }
+        //print(url)
+        let (data, resp) = try await URLSession.shared.data(from: url)
+        if let statusCode = (resp as? HTTPURLResponse)?.statusCode, statusCode != 200 {
+            throw Errors.statusCode(statusCode)
+        }
+        //print(resp)
+        do {
+            let decoded = try JSONDecoder().decode(T.self, from: data)
+            //print("here?")
+            return decoded
+        } catch {
+            throw Errors.unknown(underlying: error)
+        }
+    }
+    
+    /**
+     Generic type is inferred by context in Swift. When called, explicit state the return type i.e. let meal: Meal
+     */
+    func fetchWith<T: Codable>(endpoint: EndpointTypes, input value: String) async throws -> T {
         //print("fetch \(value)")
         let request = try await endpoint.constructUrl(with: value)
         //print(request)
@@ -98,6 +136,9 @@ struct APIService {
         }
     }
     
+    /**
+     Fetch meal details by id
+     */
     func getDetails(for idMeal: String) async throws -> Meal {
         print("getDetail for: \(idMeal)")
         do {

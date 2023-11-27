@@ -25,7 +25,7 @@ enum SheetItem: Int, CaseIterable {
             return "magnifyingglass"
         }
     }
-    var SheetItems: (title: String, apiType: APIService.Types) {
+    var SheetItems: (title: String, apiType: APIService.EndpointTypes) {
         switch self {
         case .ByArea:
             return ("Landområder", .byArea)
@@ -46,7 +46,7 @@ struct SearchView: View {
     @State private var isAlert: Bool = false
     @State private var isEmpty: Bool = false
     @State private var currentError: APIService.Errors?
-    @State private var currentEndpoint: APIService.Types = .byName
+    @State private var currentEndpoint: APIService.EndpointTypes = .byName
     @State private var currentItem: SheetItem = .ByArea
     @State private var currentTitle: String = ""
     @State private var currentSearchResult: SearchResult?
@@ -121,12 +121,11 @@ struct SearchView: View {
                 $currentTitle,
                 $isShowingSheet,
                 $currentEndpoint,
+                // lifecycles escaped here
                 callback1: {
                     self.handleDisplay($0)
-                    print(isEmpty)
                 },
                 callback2: {
-                    // escaped here
                     self.handleResult($0)
                 }
             )
@@ -135,7 +134,10 @@ struct SearchView: View {
     }
 }
 
+
+
 /**
+ SHEET VIEW
  All Model can conform to this protocol  for callback the generic result type
  */
 protocol SearchResult: Codable {}
@@ -146,10 +148,17 @@ private struct SheetView: View {
     @EnvironmentObject var settings: AppSettings
     @Binding private var isShowing: Bool
     @Binding private var title: String
-    @Binding private var endpoint: APIService.Types
+    @Binding private var endpoint: APIService.EndpointTypes
+    @State private var indicatorEndpoint: APIService.ListEndpoints = .allAreas
     @State private var currentError: APIService.Errors?
     @State private var query: String = ""
     @State private var isAlert: Bool = false
+    @State private var isTips: Bool = false
+    @State private var categoryIndicators: Category?
+    @State private var areaIndicators: Area?
+    @State private var ingredientsIndicators: Ingredient?
+    @State private var mealIndicators: Meal?
+    
     // Dependency injection
     private let API: APIService
     
@@ -157,13 +166,69 @@ private struct SheetView: View {
     private let onEscape: (SearchResult) -> Void
     private let onEmpty: (Bool) -> Void
     // @escaping literally means outlives the lifecycle of this View for callbacks ....................💀
-    init(_ title: Binding<String>, _ isShowing: Binding<Bool>, _ endpoint: Binding<APIService.Types>, _ _API: APIService = APIService.shared, callback1: @escaping (Bool) -> Void, callback2 callBack2: @escaping (SearchResult) -> Void) {
+    init(_ title: Binding<String>, _ isShowing: Binding<Bool>, _ endpoint: Binding<APIService.EndpointTypes>, _ _API: APIService = APIService.shared, callback1: @escaping (Bool) -> Void, callback2 callBack2: @escaping (SearchResult) -> Void) {
         self._title = title
         self._isShowing = isShowing
         self._endpoint = endpoint
         self.API = _API
         self.onEmpty = callback1
         self.onEscape = callBack2
+    }
+    private func doFetchQueryTask() -> Void {
+        Task {
+            do {
+                let sanitizedQuery = try Help.sanitize(this: query)
+                switch self.endpoint {
+                case .byName:
+                    let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                    result.meals == nil ? onEmpty(true) : onEmpty(false)
+                    onEscape(result as Meal)
+                case .byCategory:
+                    let result: Category = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                    result.meals == nil ? onEmpty(true) : onEmpty(false)
+                    onEscape(result as Category)
+                case .byArea:
+                    let result: Area = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                    result.meals == nil ? onEmpty(true) : onEmpty(false)
+                    onEscape(result as Area)
+                case .byIngredient:
+                    let result: Ingredient = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                    result.meals == nil ? onEmpty(true) : onEmpty(false)
+                    onEscape(result as Ingredient)
+                case .byId:
+                    let result: Meal = try await API.fetchWith(endpoint: .byId, input: sanitizedQuery)
+                    result.meals == nil ? onEmpty(true) : onEmpty(false)
+                    onEscape(result as Meal)
+                }
+            } catch {
+                currentError = .unknown(underlying: error)
+                isAlert = true
+            }
+            if !isAlert {
+                self.query = ""
+                isShowing.toggle()
+            }
+        } // Async  batch
+    }
+    private func doFetchIndicatorsTask(_ with: APIService.ListEndpoints) -> Void {
+        Task {
+            do {
+                switch with {
+                case .allCategories:
+                    let indicators: Category = try await API.fetchList(endpoint: .allCategories)
+                    self.categoryIndicators = indicators
+                case .allAreas:
+                    let indicators: Area = try await API.fetchList(endpoint: .allAreas)
+                    self.areaIndicators = indicators
+                case .allIngredients:
+                    let indicators: Ingredient = try await API.fetchList(endpoint: .allIngredients)
+                    self.ingredientsIndicators = indicators
+                case .randomMeal:
+                    let indicators: Meal = try await API.fetchList(endpoint: .randomMeal)
+                    self.mealIndicators = indicators
+                }
+            }
+        }
     }
     
     var body: some View {
@@ -179,52 +244,7 @@ private struct SheetView: View {
                     .fontWeight(.heavy)
                 Spacer()
                 Button {
-                    Task {
-                        do {
-                            let sanitizedQuery = try Help.sanitize(this: query)
-                            switch endpoint {
-                            case .byName:
-                                let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
-                                result.meals == nil ? onEmpty(true) : onEmpty(false)
-                                onEscape(result as Meal)
-                            case .byCategory:
-                                let result: Category = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
-                                result.meals == nil ? onEmpty(true) : onEmpty(false)
-                                onEscape(result as Category)
-                            case .byArea:
-                                let result: Area = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
-                                result.meals == nil ? onEmpty(true) : onEmpty(false)
-                                onEscape(result as Area)
-                            case .byIngredient:
-                                let result: Ingredient = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
-                                result.meals == nil ? onEmpty(true) : onEmpty(false)
-                                onEscape(result as Ingredient)
-                            case .byId:
-                                let result: Meal = try await API.fetchWith(endpoint: .byId, input: sanitizedQuery)
-                                result.meals == nil ? onEmpty(true) : onEmpty(false)
-                                onEscape(result as Meal)
-                            case .allAreas:
-                                let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
-                                result.meals == nil ? onEmpty(true) : onEmpty(false)
-                                onEscape(result)
-                            case .allIngredients:
-                                let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
-                                result.meals == nil ? onEmpty(true) : onEmpty(false)
-                                onEscape(result)
-                            case .allCategories:
-                                let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
-                                result.meals == nil ? onEmpty(true) : onEmpty(false)
-                                onEscape(result)
-                            }
-                        } catch {
-                            currentError = .unknown(underlying: error)
-                            isAlert = true
-                        }
-                        if !isAlert {
-                            self.query = ""
-                            isShowing.toggle()
-                        }
-                    } // Async  batch
+                    doFetchQueryTask()
                 } label: {
                     Text("Søk")
                 }
@@ -233,6 +253,121 @@ private struct SheetView: View {
             .padding(EdgeInsets(top: 20, leading: 5, bottom: 5, trailing: 5))
             Spacer()
             
+            // Slider menus fetch on request
+            HStack {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.22)) {
+                        isTips.toggle()
+                        // Listening to SearchView current endpoint - two way binding and fetch upon request
+                        if endpoint == .byArea {
+                            self.indicatorEndpoint = .allAreas
+                        } else if endpoint == .byCategory {
+                            self.indicatorEndpoint = .allCategories
+                        } else if endpoint == .byIngredient {
+                            self.indicatorEndpoint = .allIngredients
+                        } else {
+                            self.indicatorEndpoint = .randomMeal
+                        }
+                        doFetchIndicatorsTask(indicatorEndpoint)
+                    }
+                } label: {
+                    HStack {
+                        Text(isTips ? "Close":"Tips?")
+                        Image(systemName: isTips ? "arrow.left.and.line.vertical.and.arrow.right" : "arrow.right.and.line.vertical.and.arrow.left")
+                    }
+                }
+                ScrollView([.horizontal], showsIndicators: false) {
+                    LazyHStack {
+                        if isTips {
+                            if let areas = areaIndicators?.meals {
+                                ForEach(areas, id: \.self) { area in
+                                    Button {
+                                        //print(cat.strCategory)
+                                        self.query = area.strArea ?? ""
+                                        doFetchQueryTask()
+                                    } label: {
+                                        Text(area.strArea ?? "")
+                                            .padding()
+                                            .foregroundColor(.white)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 15)
+                                                    .stroke(settings.isDarkMode ? Color.white : Color.black, lineWidth: 2)
+                                                    .background(settings.isDarkMode ? Color.customPrimary : Color.customTertiary)
+                                            )
+                                            .cornerRadius(15)
+                                    }
+                                    
+                                }
+                                .padding(.leading)
+                            }
+                            if let cats = categoryIndicators?.categories {
+                                ForEach(cats, id: \.idCategory) { cat in
+                                    Button {
+                                        //print(cat.strCategory)
+                                        self.query = cat.strCategory
+                                        doFetchQueryTask()
+                                    } label: {
+                                        Text(cat.strCategory)
+                                            .padding()
+                                            .foregroundColor(.white)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 15)
+                                                    .stroke(settings.isDarkMode ? Color.white : Color.black, lineWidth: 2)
+                                                    .background(settings.isDarkMode ? Color.customPrimary : Color.customTertiary)
+                                            )
+                                            .cornerRadius(15)
+                                    }
+                                    
+                                }
+                                .padding(.leading)
+                            }
+                            if let ings = ingredientsIndicators?.meals {
+                                ForEach(ings, id: \.idIngredient) { ing in
+                                    Button {
+                                        self.query = ing.strIngredient ?? ""
+                                        doFetchQueryTask()
+                                    } label: {
+                                        Text(ing.strIngredient ?? "")
+                                            .padding()
+                                            .foregroundColor(.white)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 15)
+                                                    .stroke(settings.isDarkMode ? Color.white : Color.black, lineWidth: 2)
+                                                    .background(settings.isDarkMode ? Color.customPrimary : Color.customTertiary)
+                                            )
+                                            .cornerRadius(15)
+                                    }
+                                    
+                                }
+                            }
+                            if let random = mealIndicators?.meals {
+                                ForEach(random, id: \.idMeal) { rnd in
+                                    Button {
+                                        self.query = rnd.strMeal
+                                        doFetchQueryTask()
+                                    } label: {
+                                        Text(rnd.strMeal)
+                                            .padding()
+                                            .foregroundColor(.white)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: 15)
+                                                    .stroke(settings.isDarkMode ? Color.white : Color.black, lineWidth: 2)
+                                                    .background(settings.isDarkMode ? Color.customPrimary : Color.customTertiary)
+                                            )
+                                            .cornerRadius(15)
+                                    }
+                                    
+                                }
+                            }
+                        }
+                    } // lazy load
+                    .padding()
+                } // Slider - Scroll
+            } // Slider - Hstack
+            .padding()
+            
+            
+            Spacer()
             // Disclaimer - The "jumpy" effect is due to hidden Keyboard in simulation mode. Make sure to enable Keyboard CMD+K
             ZStack(alignment: .leading) {
                 Text("Søk...")
@@ -272,7 +407,7 @@ struct SheetView_Previews: PreviewProvider {
     struct Wrapper : View {
         @State private var isShowing = true
         @State private var title = "Test"
-        @State private var endpoint = APIService.Types.byName
+        @State private var endpoint = APIService.EndpointTypes.byCategory
         var body: some View {
             SheetView($title, $isShowing, $endpoint, callback1: { _ in
             }, callback2: { _ in
