@@ -16,10 +16,10 @@ import Foundation
 class DetailViewModel: ObservableObject {
     @Published var itemDetails: [String:Meal] = [:]
     func getDetails(for idMeal: String, using API: APIService) async {
-        print("getDetail for: \(idMeal)")
+        //print("getDetail for: \(idMeal)")
         do {
             // JSON are serialized as Meal Model
-            let mealItems: Meal = try await API.fetchWith(endpoint: .byId, input: idMeal)
+            let mealItems: Meal = try await API.getDetails(for: idMeal)
             DispatchQueue.main.async {
                 // Published is always on Main Thread for async
                 self.itemDetails[idMeal] = mealItems

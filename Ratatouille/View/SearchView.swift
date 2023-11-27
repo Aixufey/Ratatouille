@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 enum SheetItem: Int, CaseIterable {
     case ByArea = 0
@@ -43,17 +44,13 @@ struct SearchView: View {
     @State private var query: String = ""
     @State private var isShowingSheet: Bool = false
     @State private var isAlert: Bool = false
+    @State private var isEmpty: Bool = false
     @State private var currentError: APIService.Errors?
     @State private var currentEndpoint: APIService.Types = .byName
     @State private var currentItem: SheetItem = .ByArea
     @State private var currentTitle: String = ""
     @State private var currentSearchResult: SearchResult?
     @State private var unifiedResult = UnifiedModel()
-    // Dependency injection
-    private var API: APIService
-    init(_ _API: APIService = APIService.shared) {
-        self.API = _API
-    }
     
     private func handleResult(_ result: SearchResult) {
         self.currentSearchResult = result
@@ -69,6 +66,9 @@ struct SearchView: View {
             unifiedResult = UnifiedModel(ingredient: ing)
         default: break
         }
+    }
+    private func handleDisplay(_ status: Bool) {
+        self.isEmpty = status
     }
     
     var body: some View {
@@ -100,10 +100,20 @@ struct SearchView: View {
             .background(settings.isDarkMode ? Color(.systemGray5) : Color(.systemGray5))
             .cornerRadius(10)
             Spacer()
-            
-            // Pass the binding generic protocol
-            SearchResultView(currentSearchResult: $unifiedResult)
-            
+            if !isEmpty {
+                // Pass the binding generic protocol
+                SearchResultView(currentSearchResult: $unifiedResult)
+            } else {
+                VStack {
+                    KFImage(URL(string: "https://cdn-icons-png.flaticon.com/512/6134/6134065.png"))
+                        .resizable()
+                        .scaledToFit()
+                        .clipShape(Circle())
+                        .frame(width: 150, height: 150)
+                        .overlay(Circle().stroke(Color.customPrimary, lineWidth: 4))
+                    Text("No result")
+                }
+            }
             Spacer()
         } // VStack - Container
         .sheet(isPresented: $isShowingSheet) {
@@ -111,7 +121,11 @@ struct SearchView: View {
                 $currentTitle,
                 $isShowingSheet,
                 $currentEndpoint,
-                callback: {
+                callback1: {
+                    self.handleDisplay($0)
+                    print(isEmpty)
+                },
+                callback2: {
                     // escaped here
                     self.handleResult($0)
                 }
@@ -121,25 +135,35 @@ struct SearchView: View {
     }
 }
 
-// All Model can conform to this protocol  for callback the generic result type
+/**
+ All Model can conform to this protocol  for callback the generic result type
+ */
 protocol SearchResult: Codable {}
+/**
+ All Binding States auto wired by Parent
+ */
 private struct SheetView: View {
     @EnvironmentObject var settings: AppSettings
-    @Binding private var isShowing: Bool // States auto wired by Parent
+    @Binding private var isShowing: Bool
     @Binding private var title: String
     @Binding private var endpoint: APIService.Types
     @State private var currentError: APIService.Errors?
     @State private var query: String = ""
     @State private var isAlert: Bool = false
+    // Dependency injection
     private let API: APIService
+    
+    // Callbacks
     private let onEscape: (SearchResult) -> Void
+    private let onEmpty: (Bool) -> Void
     // @escaping literally means outlives the lifecycle of this View for callbacks ....................💀
-    init(_ title: Binding<String>, _ isShowing: Binding<Bool>, _ endpoint: Binding<APIService.Types>, _ _API: APIService = APIService.shared, callback callBack: @escaping (SearchResult) -> Void) {
+    init(_ title: Binding<String>, _ isShowing: Binding<Bool>, _ endpoint: Binding<APIService.Types>, _ _API: APIService = APIService.shared, callback1: @escaping (Bool) -> Void, callback2 callBack2: @escaping (SearchResult) -> Void) {
         self._title = title
         self._isShowing = isShowing
         self._endpoint = endpoint
         self.API = _API
-        self.onEscape = callBack
+        self.onEmpty = callback1
+        self.onEscape = callBack2
     }
     
     var body: some View {
@@ -161,27 +185,35 @@ private struct SheetView: View {
                             switch endpoint {
                             case .byName:
                                 let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                result.meals == nil ? onEmpty(true) : onEmpty(false)
                                 onEscape(result as Meal)
                             case .byCategory:
                                 let result: Category = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                result.meals == nil ? onEmpty(true) : onEmpty(false)
                                 onEscape(result as Category)
                             case .byArea:
                                 let result: Area = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                result.meals == nil ? onEmpty(true) : onEmpty(false)
                                 onEscape(result as Area)
                             case .byIngredient:
                                 let result: Ingredient = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                result.meals == nil ? onEmpty(true) : onEmpty(false)
                                 onEscape(result as Ingredient)
                             case .byId:
                                 let result: Meal = try await API.fetchWith(endpoint: .byId, input: sanitizedQuery)
+                                result.meals == nil ? onEmpty(true) : onEmpty(false)
                                 onEscape(result as Meal)
                             case .allAreas:
                                 let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                result.meals == nil ? onEmpty(true) : onEmpty(false)
                                 onEscape(result)
                             case .allIngredients:
                                 let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                result.meals == nil ? onEmpty(true) : onEmpty(false)
                                 onEscape(result)
                             case .allCategories:
                                 let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                                result.meals == nil ? onEmpty(true) : onEmpty(false)
                                 onEscape(result)
                             }
                         } catch {
@@ -242,9 +274,9 @@ struct SheetView_Previews: PreviewProvider {
         @State private var title = "Test"
         @State private var endpoint = APIService.Types.byName
         var body: some View {
-            SheetView($title, $isShowing, $endpoint) {result in
-                
-            }
+            SheetView($title, $isShowing, $endpoint, callback1: { _ in
+            }, callback2: { _ in
+            })
         }
     }
     static var previews: some View {
