@@ -82,7 +82,7 @@ struct APIService {
         guard let url = URL(string: request) else {
             throw Errors.statusCode(400)
         }
-        print(url)
+        //print(url)
         let (data, resp) = try await URLSession.shared.data(from: url)
         if let statusCode = (resp as? HTTPURLResponse)?.statusCode,
            statusCode != 200 {
@@ -93,6 +93,16 @@ struct APIService {
             let decoded = try JSONDecoder().decode(T.self, from: data)
             //print(decoded)
             return decoded
+        } catch {
+            throw Errors.unknown(underlying: error)
+        }
+    }
+    
+    func getDetails(for idMeal: String) async throws -> Meal {
+        print("getDetail for: \(idMeal)")
+        do {
+            let mealItems: Meal = try await fetchWith(endpoint: .byId, input: idMeal)
+            return mealItems
         } catch {
             throw Errors.unknown(underlying: error)
         }

@@ -8,22 +8,23 @@
 import SwiftUI
 import Kingfisher
 /**
- Observe id and transform accordingly
+ Observe id and transform accordingly on appear
  */
 struct DetailView: View {
     @ObservedObject var usingModel: DetailViewModel
-    @Binding private var currentItem: UnifiedModel
+    @Binding private var currentResult: UnifiedModel
     @State private var isInstruction: Bool = false
     @State private var isIngredient: Bool = false
     private var forId: String
     init(forId: String, usingModel: DetailViewModel, with: Binding<UnifiedModel>) {
         self.forId = forId
         self.usingModel = usingModel
-        self._currentItem = with
+        self._currentResult = with
     }
     
     var body: some View {
         LazyVStack {
+            // Fetch for full details using current id
             if let details = usingModel.itemDetails[forId]?.meals?.first {
                 KFImage(URL(string: details.strMealThumb))
                     .resizable()
@@ -84,7 +85,7 @@ struct DetailView: View {
         .cornerRadius(25)
         .onAppear {
             Task {
-                print("ID inside DV: \(forId)")
+                //print("ID inside DV: \(forId)")
                 await usingModel.getDetails(for: forId, using: APIService.shared)
             }
         }

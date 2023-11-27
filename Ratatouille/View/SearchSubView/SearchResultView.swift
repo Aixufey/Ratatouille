@@ -11,7 +11,7 @@ import Kingfisher
  Subscribing to 'DVModel' and pass in id to fetch more details for each item
  */
 struct SearchResultView: View {
-    @Binding var unifiedResult: UnifiedModel
+    @Binding private var unifiedResult: UnifiedModel
     @StateObject private var DVModel = DetailViewModel()
     private let fallBackImg: String = "https://cdn-icons-png.flaticon.com/512/2276/2276931.png"
     init(currentSearchResult unifiedResult: Binding<UnifiedModel>) {
@@ -38,8 +38,13 @@ struct SearchResultView: View {
                                             .clipShape(Circle())
                                             .frame(width: 85, height: 85)
                                             .overlay(Circle().stroke(Color.customPrimary, lineWidth: 4))
-                                        Text(area.strMeal ?? "")
-                                            .padding(.leading)
+                                        
+                                        LazyVStack(alignment: .center) {
+                                            Text(area.strMeal ?? "")
+                                                .multilineTextAlignment(SwiftUI.TextAlignment.center)
+                                        }
+                                        .padding()
+                                        .frame(width: 200)
                                     }
                                 }
                             }
@@ -53,7 +58,19 @@ struct SearchResultView: View {
                                         DetailView(forId: cat.idMeal, usingModel: DVModel, with: $unifiedResult)
                                     }
                                 } label: {
-                                    Text(cat.strMeal)
+                                    KFImage(URL(string: cat.strMealThumb ?? fallBackImg))
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipShape(Circle())
+                                        .frame(width: 85, height: 85)
+                                        .overlay(Circle().stroke(Color.customPrimary, lineWidth: 4))
+                                    
+                                    LazyVStack(alignment: .center) {
+                                        Text(cat.strMeal)
+                                            .multilineTextAlignment(SwiftUI.TextAlignment.center)
+                                    }
+                                    .padding()
+                                    .frame(width: 200)
                                 }
                             }
                         }
@@ -66,7 +83,19 @@ struct SearchResultView: View {
                                         DetailView(forId: ing.idMeal ?? "", usingModel: DVModel, with: $unifiedResult)
                                     }
                                 } label: {
-                                    Text(ing.strMeal ?? "")
+                                    KFImage(URL(string: ing.strMealThumb ?? fallBackImg))
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipShape(Circle())
+                                        .frame(width: 85, height: 85)
+                                        .overlay(Circle().stroke(Color.customPrimary, lineWidth: 4))
+                                    
+                                    LazyVStack(alignment: .center) {
+                                        Text(ing.strMeal ?? "")
+                                            .multilineTextAlignment(SwiftUI.TextAlignment.center)
+                                    }
+                                    .padding()
+                                    .frame(width: 200)
                                 }
                             }
                         }
@@ -75,21 +104,29 @@ struct SearchResultView: View {
                         Section(header: Text("Matrett\(meals.count <= 1 ? "":"er")")) {
                             ForEach(meals, id: \.idMeal) { meal in
                                 NavigationLink {
-                                    Button {
-                                        print(meals.count)
-                                    } label: {
-                                        Text("click")
-                                    }
-
                                     ScrollView {
                                         DetailView(forId: meal.idMeal, usingModel: DVModel, with: $unifiedResult)
                                     }
                                 } label: {
-                                    Text(meal.strMeal)
+                                    KFImage(URL(string: meal.strMealThumb))
+                                        .resizable()
+                                        .scaledToFit()
+                                        .clipShape(Circle())
+                                        .frame(width: 85, height: 85)
+                                        .overlay(Circle().stroke(Color.customPrimary, lineWidth: 4))
+                                    
+                                    LazyVStack(alignment: .center) {
+                                        Text(meal.strMeal)
+                                            .multilineTextAlignment(SwiftUI.TextAlignment.center)
+                                    }
+                                    .padding()
+                                    .frame(width: 200)
                                 }
                             }
+                            
                         }
                     }
+                    
                     
                 } // List
             } // Navigation
