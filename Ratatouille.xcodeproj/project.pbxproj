@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		71315F6E2B128B9600FED5BA /* UnifiedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71315F6D2B128B9600FED5BA /* UnifiedModel.swift */; };
+		713670132B161CE900C7BFC9 /* UnifiedModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713670122B161CE900C7BFC9 /* UnifiedModelData.swift */; };
 		714929EF2B0D0BA600074617 /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929EE2B0D0BA600074617 /* CategoriesView.swift */; };
 		714929F12B0D21C800074617 /* LandAreasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929F02B0D21C800074617 /* LandAreasView.swift */; };
 		714929F32B0D21D300074617 /* IngredientsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929F22B0D21D300074617 /* IngredientsView.swift */; };
@@ -68,6 +69,7 @@
 
 /* Begin PBXFileReference section */
 		71315F6D2B128B9600FED5BA /* UnifiedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedModel.swift; sourceTree = "<group>"; };
+		713670122B161CE900C7BFC9 /* UnifiedModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedModelData.swift; sourceTree = "<group>"; };
 		714929EE2B0D0BA600074617 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
 		714929F02B0D21C800074617 /* LandAreasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandAreasView.swift; sourceTree = "<group>"; };
 		714929F22B0D21D300074617 /* IngredientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsView.swift; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 				718911FB2B0EB633004E3A95 /* Meal.swift */,
 				71315F6D2B128B9600FED5BA /* UnifiedModel.swift */,
 				71A1DF132B13525500367623 /* DetailViewModel.swift */,
+				713670122B161CE900C7BFC9 /* UnifiedModelData.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -455,6 +458,7 @@
 				71492A012B0D5ACC00074617 /* Category.swift in Sources */,
 				71A1DF142B13525500367623 /* DetailViewModel.swift in Sources */,
 				718911FC2B0EB633004E3A95 /* Meal.swift in Sources */,
+				713670132B161CE900C7BFC9 /* UnifiedModelData.swift in Sources */,
 				718911F32B0E5244004E3A95 /* APIService.swift in Sources */,
 				716D142B2B0C01E700BB1DF3 /* SettingsView.swift in Sources */,
 				7164818F2B0235130020C704 /* Persistence.swift in Sources */,
