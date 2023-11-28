@@ -140,7 +140,7 @@ struct APIService {
      Fetch meal details by id
      */
     func getDetails(for idMeal: String) async throws -> Meal {
-        print("getDetail for: \(idMeal)")
+        // print("getDetail for: \(idMeal)")
         do {
             let mealItems: Meal = try await fetchWith(endpoint: .byId, input: idMeal)
             return mealItems
