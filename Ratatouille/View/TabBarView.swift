@@ -29,6 +29,9 @@ struct TabBarView: View {
 
 struct TabBarView_Previews: PreviewProvider {
     static var previews: some View {
-        TabBarView().environmentObject(AppSettings().self)
+        TabBarView()
+//            .environmentObject(IsEmptyResult().self)
+            .environmentObject(AppSettings().self)
+            .environmentObject(UnifiedModelData().self)
     }
 }

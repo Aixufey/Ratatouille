@@ -8,6 +8,9 @@
 import SwiftUI
 import Kingfisher
 
+class IsEmptyResult: ObservableObject {
+    @Published var isEmpty: Bool = false
+}
 enum SheetItem: Int, CaseIterable {
     case ByArea = 0
     case ByCategory
@@ -40,35 +43,48 @@ enum SheetItem: Int, CaseIterable {
 }
 
 struct SearchView: View {
-    @EnvironmentObject var settings: AppSettings
+    @StateObject private var isEmptyResult = IsEmptyResult()
+    @EnvironmentObject private var unifiedData: UnifiedModelData
+    @EnvironmentObject private var settings: AppSettings
     @State private var query: String = ""
     @State private var isShowingSheet: Bool = false
     @State private var isAlert: Bool = false
-    @State private var isEmpty: Bool = false
     @State private var currentError: APIService.Errors?
     @State private var currentEndpoint: APIService.EndpointTypes = .byName
     @State private var currentItem: SheetItem = .ByArea
     @State private var currentTitle: String = ""
     @State private var currentSearchResult: SearchResult?
     @State private var unifiedResult = UnifiedModel()
-    
+    // Dependency injection
+    private let API: APIService
+    init(_ API: APIService = APIService.shared) {
+        self.API = API
+    }
+    /**
+     This will be refactored IF I have to optimalize the props drilling.
+     Alternative: use Binding to SearchView
+     */
     private func handleResult(_ result: SearchResult) {
         self.currentSearchResult = result
         //print(currentSearchResult ?? "")
         switch result {
         case let area as Area:
             unifiedResult = UnifiedModel(area: area)
+            unifiedData.unifiedModel.area = UnifiedModel(area: area).area
         case let meal as Meal:
             unifiedResult = UnifiedModel(meal: meal)
+            unifiedData.unifiedModel = UnifiedModel(meal: meal)
         case let cat as Category:
             unifiedResult = UnifiedModel(category: cat)
+            unifiedData.unifiedModel = UnifiedModel(category: cat)
         case let ing as Ingredient:
             unifiedResult = UnifiedModel(ingredient: ing)
+            unifiedData.unifiedModel = UnifiedModel(ingredient: ing)
         default: break
         }
     }
     private func handleDisplay(_ status: Bool) {
-        self.isEmpty = status
+        self.isEmptyResult.isEmpty = status
     }
     
     var body: some View {
@@ -99,21 +115,14 @@ struct SearchView: View {
             .frame(height: 55)
             .background(settings.isDarkMode ? Color(.systemGray5) : Color(.systemGray5))
             .cornerRadius(10)
+            Text("Søk")
+                .font(.custom(CustomFont.ComicBold.name, size: 35))
             Spacer()
-            if !isEmpty {
-                // Pass the binding generic protocol
-                SearchResultView(currentSearchResult: $unifiedResult)
-            } else {
-                VStack {
-                    KFImage(URL(string: "https://cdn-icons-png.flaticon.com/512/6134/6134065.png"))
-                        .resizable()
-                        .scaledToFit()
-                        .clipShape(Circle())
-                        .frame(width: 150, height: 150)
-                        .overlay(Circle().stroke(Color.customPrimary, lineWidth: 4))
-                    Text("No result")
-                }
-            }
+            
+            // Pass the binding generic protocol
+            SearchResultView(currentSearchResult: $unifiedResult, API)
+                .environmentObject(isEmptyResult)
+            
             Spacer()
         } // VStack - Container
         .sheet(isPresented: $isShowingSheet) {
@@ -400,6 +409,8 @@ private struct SheetView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         SearchView()
+            .environmentObject(IsEmptyResult().self)
+            .environmentObject(UnifiedModelData().self)
             .environmentObject(AppSettings().self)
     }
 }

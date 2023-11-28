@@ -105,8 +105,8 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        let settings = AppSettings()
         SettingsView()
-            .environmentObject(settings)
+            .environmentObject(AppSettings().self)
+            .environmentObject(UnifiedModelData().self)
     }
 }
