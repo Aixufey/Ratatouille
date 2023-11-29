@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Flag: Identifiable {
+class FlagDTO: Identifiable {
     static let countriesMap: [String:String] =
     [
         "American": "US",

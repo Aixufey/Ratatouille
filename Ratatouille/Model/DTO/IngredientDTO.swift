@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Ingredient: Codable, SearchResult {
+struct IngredientDTO: Codable, SearchResult {
     var meals: [IngredientItems]?
 }
 
@@ -24,7 +24,7 @@ struct IngredientItems: Hashable, Codable, NameProvider {
     var strMealThumb: String?
 }
 
-extension Ingredient {
+extension IngredientDTO {
     static let dummy = [
         IngredientItems(strIngredient: "پسته"),
         IngredientItems(strIngredient: "زعفران")

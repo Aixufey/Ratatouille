@@ -14,12 +14,12 @@ import Foundation
  Usage observe this class by calling this fn and pass in the meal id i.e. dynamically way foreach loop from Parent View
  */
 class DetailViewModel: ObservableObject {
-    @Published var itemDetails: [String:Meal] = [:]
+    @Published var itemDetails: [String:MealDTO] = [:]
     func getDetails(for idMeal: String, using API: APIService) async {
         //print("getDetail for: \(idMeal)")
         do {
             // JSON are serialized as Meal Model
-            let mealItems: Meal = try await API.getDetails(for: idMeal)
+            let mealItems: MealDTO = try await API.getDetails(for: idMeal)
             DispatchQueue.main.async {
                 // Published is always on Main Thread for async
                 self.itemDetails[idMeal] = mealItems

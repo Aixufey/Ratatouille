@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Area: Codable, SearchResult {
+struct AreaDTO: Codable, SearchResult {
     var meals: [AreaItems]?
 }
 
@@ -23,7 +23,7 @@ struct AreaItems: Hashable, Codable, NameProvider {
     var strMealThumb: String?
 }
 
-extension Area {
+extension AreaDTO {
     static let dummy = [
         AreaItems(strArea: "American"),
         AreaItems(strArea: "Jamaican"),

@@ -87,9 +87,9 @@ struct SearchResultView: View {
                                                     .frame(width: 33)
                                             }.onAppear {
                                                 Task {
-                                                    let meal: Meal = try await API.getDetails(for: area.idMeal ?? "")
+                                                    let meal: MealDTO = try await API.getDetails(for: area.idMeal ?? "")
                                                     let id = meal.meals?.first?.idMeal
-                                                    self.countryISO = try await Flag.getCountryCode(for: id ?? "") ?? fallBackImg
+                                                    self.countryISO = try await FlagDTO.getCountryCode(for: id ?? "") ?? fallBackImg
                                                     //print($countryISO.wrappedValue)
                                                 }
                                             }
@@ -200,7 +200,7 @@ struct SearchResultView: View {
 struct SearchResultView_Previews: PreviewProvider {
     struct Wrapper: View {
         @State private var unifiedResult = UnifiedModel(
-            area: Area(meals: [
+            area: AreaDTO(meals: [
                 AreaItems(strArea: "Russian", idMeal: "52834",strMeal: "Beef stroganoff", strMealThumb: "https://www.themealdb.com/images/media/meals/svprys1511176755.jpg")
             ])
         )

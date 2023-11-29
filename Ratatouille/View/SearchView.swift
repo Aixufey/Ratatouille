@@ -68,16 +68,16 @@ struct SearchView: View {
         self.currentSearchResult = result
         //print(currentSearchResult ?? "")
         switch result {
-        case let area as Area:
+        case let area as AreaDTO:
             unifiedResult = UnifiedModel(area: area)
             unifiedData.unifiedModel.area = UnifiedModel(area: area).area
-        case let meal as Meal:
+        case let meal as MealDTO:
             unifiedResult = UnifiedModel(meal: meal)
             unifiedData.unifiedModel = UnifiedModel(meal: meal)
-        case let cat as Category:
+        case let cat as CategoryDTO:
             unifiedResult = UnifiedModel(category: cat)
             unifiedData.unifiedModel = UnifiedModel(category: cat)
-        case let ing as Ingredient:
+        case let ing as IngredientDTO:
             unifiedResult = UnifiedModel(ingredient: ing)
             unifiedData.unifiedModel = UnifiedModel(ingredient: ing)
         default: break
@@ -163,10 +163,10 @@ private struct SheetView: View {
     @State private var query: String = ""
     @State private var isAlert: Bool = false
     @State private var isTips: Bool = false
-    @State private var categoryIndicators: Category?
-    @State private var areaIndicators: Area?
-    @State private var ingredientsIndicators: Ingredient?
-    @State private var mealIndicators: Meal?
+    @State private var categoryIndicators: CategoryDTO?
+    @State private var areaIndicators: AreaDTO?
+    @State private var ingredientsIndicators: IngredientDTO?
+    @State private var mealIndicators: MealDTO?
     
     // Dependency injection
     private let API: APIService
@@ -189,25 +189,25 @@ private struct SheetView: View {
                 let sanitizedQuery = try Help.sanitize(this: query)
                 switch self.endpoint {
                 case .byName:
-                    let result: Meal = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                    let result: MealDTO = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
                     result.meals == nil ? onEmpty(true) : onEmpty(false)
-                    onEscape(result as Meal)
+                    onEscape(result as MealDTO)
                 case .byCategory:
-                    let result: Category = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                    let result: CategoryDTO = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
                     result.meals == nil ? onEmpty(true) : onEmpty(false)
-                    onEscape(result as Category)
+                    onEscape(result as CategoryDTO)
                 case .byArea:
-                    let result: Area = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                    let result: AreaDTO = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
                     result.meals == nil ? onEmpty(true) : onEmpty(false)
-                    onEscape(result as Area)
+                    onEscape(result as AreaDTO)
                 case .byIngredient:
-                    let result: Ingredient = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
+                    let result: IngredientDTO = try await API.fetchWith(endpoint: endpoint, input: sanitizedQuery)
                     result.meals == nil ? onEmpty(true) : onEmpty(false)
-                    onEscape(result as Ingredient)
+                    onEscape(result as IngredientDTO)
                 case .byId:
-                    let result: Meal = try await API.fetchWith(endpoint: .byId, input: sanitizedQuery)
+                    let result: MealDTO = try await API.fetchWith(endpoint: .byId, input: sanitizedQuery)
                     result.meals == nil ? onEmpty(true) : onEmpty(false)
-                    onEscape(result as Meal)
+                    onEscape(result as MealDTO)
                 }
             } catch {
                 currentError = .unknown(underlying: error)
@@ -224,16 +224,16 @@ private struct SheetView: View {
             do {
                 switch with {
                 case .allCategories:
-                    let indicators: Category = try await API.fetchList(endpoint: .allCategories)
+                    let indicators: CategoryDTO = try await API.fetchList(endpoint: .allCategories)
                     self.categoryIndicators = indicators
                 case .allAreas:
-                    let indicators: Area = try await API.fetchList(endpoint: .allAreas)
+                    let indicators: AreaDTO = try await API.fetchList(endpoint: .allAreas)
                     self.areaIndicators = indicators
                 case .allIngredients:
-                    let indicators: Ingredient = try await API.fetchList(endpoint: .allIngredients)
+                    let indicators: IngredientDTO = try await API.fetchList(endpoint: .allIngredients)
                     self.ingredientsIndicators = indicators
                 case .randomMeal:
-                    let indicators: Meal = try await API.fetchList(endpoint: .randomMeal)
+                    let indicators: MealDTO = try await API.fetchList(endpoint: .randomMeal)
                     self.mealIndicators = indicators
                 }
             }
