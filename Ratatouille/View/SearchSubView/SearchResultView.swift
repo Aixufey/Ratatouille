@@ -27,6 +27,7 @@ struct SearchResultView: View {
     @StateObject private var DVModel = DetailViewModel()
     @State private var hashTable = Set<[TransformTest]>()
     @State private var API: APIService
+    @State private var countryISO: String = ""
     private let fallBackImg: String = "https://cdn-icons-png.flaticon.com/512/2276/2276931.png"
     init(currentSearchResult unifiedResult: Binding<UnifiedModel> = .constant(.init()), _ API: APIService = APIService.shared) {
         self._unifiedResult = unifiedResult
@@ -73,12 +74,25 @@ struct SearchResultView: View {
                                         }
                                     } label: {
                                         LazyHStack {
-                                            KFImage(URL(string: area.strMealThumb ?? fallBackImg))
-                                                .resizable()
-                                                .scaledToFit()
-                                                .clipShape(Circle())
-                                                .frame(width: 85, height: 85)
+                                            ZStack(alignment: .bottom) {
+                                                KFImage(URL(string: area.strMealThumb ?? fallBackImg))
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .clipShape(Circle())
+                                                    .frame(width: 85, height: 85)
                                                 .overlay(Circle().stroke(Color.customPrimary, lineWidth: 4))
+                                                KFImage(URL(string: countryISO))
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 33)
+                                            }.onAppear {
+                                                Task {
+                                                    let meal: Meal = try await API.getDetails(for: area.idMeal ?? "")
+                                                    let id = meal.meals?.first?.idMeal
+                                                    self.countryISO = try await Flag.getCountryCode(for: id ?? "") ?? fallBackImg
+                                                    //print($countryISO.wrappedValue)
+                                                }
+                                            }
                                             LazyVStack(alignment: .center) {
                                                 Text(area.strMeal ?? "")
                                                     .multilineTextAlignment(SwiftUI.TextAlignment.center)
