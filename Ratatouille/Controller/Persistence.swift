@@ -8,6 +8,7 @@
 import CoreData
 
 struct PersistenceController {
+    // static singleton instance
     static let shared = PersistenceController()
 
     static var preview: PersistenceController = {
@@ -28,6 +29,9 @@ struct PersistenceController {
         return result
     }()
 
+    // Creation of Core Data stack using model 'Ratatouille' schema
+    // This followed by creation of managedObjectContext which we can do CRUD via viewContext on main thread to update in synch.
+    // Inject as environment at root level.
     let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
@@ -52,5 +56,7 @@ struct PersistenceController {
             }
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
+        // Merging on constraint by object property
+        self.container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
     }
 }

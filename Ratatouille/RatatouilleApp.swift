@@ -30,6 +30,7 @@ struct RatatouilleApp: App {
     // Owner of this object throughout the lifecycle - instantiate and provide as context to children
     @StateObject private var settings = AppSettings()
     @StateObject private var unifiedModelData = UnifiedModelData()
+    // Controller for CRUD on main thread
     let persistenceController = PersistenceController.shared
     
     var body: some Scene {
