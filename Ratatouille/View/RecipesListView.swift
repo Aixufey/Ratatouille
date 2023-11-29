@@ -8,11 +8,16 @@
 import SwiftUI
 
 struct RecipesListView: View {
+    @Environment(\.managedObjectContext) var moc
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)], animation: .default) private var items: FetchedResults<Item>
+    
     @EnvironmentObject private var unifiedData: UnifiedModelData
     @State private var isShowing: Bool = false
     @State private var isRecipes: Bool = false
     var body: some View {
         VStack {
+            
+            
             VStack {
                 Image(ImageAsset.Logo.rawValue)
                     .resizable()
@@ -26,28 +31,34 @@ struct RecipesListView: View {
                             isShowing.toggle()
                         }
                     } label: {
-                        Text("Historikk")
-                        Image(systemName: isShowing ? "arrow.down.and.line.horizontal.and.arrow.up":"arrow.up.and.line.horizontal.and.arrow.down")
+                        Text(isShowing ? "Mine oppskrifter" : "Historikk")
+                        Image(systemName: isShowing ? "lightswitch.on":"lightswitch.off")
                     }
                 }.padding()
             }
-            if isShowing {
-                Divider().padding(.horizontal)
-                Text("Søk historikk")
-                LazyVStack {
-                    SearchResultView(currentSearchResult: $unifiedData.unifiedModel)
-                        .environmentObject(IsEmptyResult().self)
-                        .environmentObject(AppSettings().self)
-                        .environmentObject(UnifiedModelData().self)
-                }.padding(.top)
-            }
             Spacer()
-            VStack {
-                Image(systemName: "square.3.layers.3d.slash")
-                    .imageScale(.large).font(.system(size: 65))
-                Text("Ingen matoppskrifter")
-            }
-        }
+            Divider().padding(.horizontal)
+            ScrollView {
+                if isShowing {
+                    Text("Søk historikk")
+                    LazyVStack {
+                        SearchResultView(currentSearchResult: $unifiedData.unifiedModel)
+                            .environmentObject(IsEmptyResult().self)
+                            .environmentObject(AppSettings().self)
+                            .environmentObject(UnifiedModelData().self)
+                    }.padding(.top)
+                } else {
+                    VStack(alignment: .center) {
+                        Image(systemName: "square.3.layers.3d.slash")
+                            .imageScale(.large).font(.system(size: 65))
+                        Text("Ingen matoppskrifter")
+                    }
+                }
+            } // ScrollView
+            
+            
+            
+        } // VStack
     }
 }
 
