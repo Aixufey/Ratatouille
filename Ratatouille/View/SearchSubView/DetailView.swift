@@ -16,6 +16,7 @@ struct DetailView: View {
     @State private var isInstruction: Bool = false
     @State private var isIngredient: Bool = false
     private var forId: String
+    private let fallBackImg: String = "https://cdn-icons-png.flaticon.com/512/2072/2072130.png"
     init(forId: String, usingModel: DetailViewModel, with: Binding<UnifiedModel>) {
         self.forId = forId
         self.usingModel = usingModel
@@ -38,8 +39,14 @@ struct DetailView: View {
                 Text(details.strMeal)
                     .font(.custom(CustomFont.ComicRegular.name, size: 30))
                 Divider().padding()
-                Text("Meal ID \(details.idMeal) - \(details.strArea)")
-                    .padding()
+                HStack {
+                    Text("Meal ID \(details.idMeal) - \(details.strArea)")
+                        .padding()
+                    KFImage(URL(string: Flag.countryCode(forArea: details.strArea)))
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 44)
+                }
                 Divider().padding()
                 LazyVStack {
                     Section(header: LazyHStack {
