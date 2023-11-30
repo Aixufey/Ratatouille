@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecipesListView: View {
     @Environment(\.managedObjectContext) var moc
+    @EnvironmentObject private var db: SharedDBData
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)], animation: .default) private var items: FetchedResults<Item>
     
     @EnvironmentObject private var unifiedData: UnifiedModelData
@@ -55,7 +56,11 @@ struct RecipesListView: View {
                     }
                 }
             } // ScrollView
-            
+            List {
+                ForEach(db.meals, id: \.self) { meal in
+                    Text(meal.wrappedName)
+                }
+            }
             
             
         } // VStack
@@ -65,6 +70,7 @@ struct RecipesListView: View {
 struct RecipesListView_Previews: PreviewProvider {
     static var previews: some View {
         RecipesListView()
+            .environmentObject(SharedDBData(context: PersistenceController.shared.container.viewContext))
             .environmentObject(IsEmptyResult().self)
             .environmentObject(AppSettings().self)
             .environmentObject(UnifiedModelData().self)

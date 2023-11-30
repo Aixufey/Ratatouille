@@ -11,7 +11,7 @@ struct IngredientsView: View {
     @EnvironmentObject private var settings: AppSettings
     var body: some View {
         List {
-            ForEach(Ingredient.dummy, id: \.hashValue) { ingredient in
+            ForEach(IngredientDTO.dummy, id: \.hashValue) { ingredient in
                 NavigationLink(destination: CategoryDetailView()) {
                     SettingsRowView(for: ingredient)
                 }
