@@ -23,8 +23,8 @@ private struct TransformTest: Hashable {
  */
 struct SearchResultView: View {
     @Environment(\.managedObjectContext) var moc
+    @EnvironmentObject var db: SharedDBData
     @FetchRequest(sortDescriptors: [.init(key: "strMeal", ascending: true)]) var mealsdb: FetchedResults<Meal>
-    @FetchRequest(sortDescriptors: []) var mealIngredients: FetchedResults<MealIngredient>
     
     @EnvironmentObject var search: IsEmptyResult
     @Binding private var unifiedResult: UnifiedModel
@@ -33,25 +33,13 @@ struct SearchResultView: View {
     @State private var countryISO: String = ""
     @State private var isFavorite: Bool = false
     private var API: APIService
-    private let fallBackImg: String = "https://cdn-icons-png.flaticon.com/512/2276/2276931.png"
+    
     init(currentSearchResult unifiedResult: Binding<UnifiedModel> = .constant(.init()), _ API: APIService = APIService.shared) {
         self._unifiedResult = unifiedResult
         self.API = API
     }
-    private func fetchDetails(for id: String) async {
-        do {
-            let detailed = try await API.getDetails(for: id)
-            let mapped = detailed.meals?.compactMap { i in
-                return TransformTest(idMeal: i.idMeal, strMeal: i.idMeal, strCategory: i.strCategory, strArea: i.strArea, strInstructions: i.strInstructions, strMealThumb: i.strMealThumb, strYoutube: i.strYoutube)
-            } ?? []
-            hashTable.insert(mapped)
-            let uniques = Array(hashTable)
-            print("my cached obj: \(uniques.count)")
-        } catch {
-            print("Error in getting details")
-        }
-    }
-    private func saveFavoriteToDatabase(for id: String) throws {
+
+    func saveFavoriteToDatabase(for id: String) throws {
         let request = Meal.fetchRequest()
         request.predicate = NSPredicate(format: "idMeal == %@", id)
         if let meal = try? moc.fetch(request), let mealToUpdate = meal.first {
@@ -60,7 +48,7 @@ struct SearchResultView: View {
             try? moc.save()
         }
     }
-    private func saveRecipeToDatabase(for id: String) async throws {
+    func saveRecipeToDatabase(for id: String) async throws {
         let request = Meal.fetchRequest()
         request.predicate = NSPredicate(format: "idMeal == %@", id)
         let exist = try moc.fetch(request)
@@ -81,6 +69,7 @@ struct SearchResultView: View {
                     saveMeal.strYoutube = meal?.strYoutube
                 }
                 try? moc.save()
+                db.fetchMeal()
             } catch {
                 throw APIService.Errors.unknown(underlying: error)
             }
@@ -112,7 +101,7 @@ struct SearchResultView: View {
                                             DetailView(forId: area.idMeal ?? "", usingModel: DVModel, with: $unifiedResult)
                                         }
                                     } label: {
-                                        KFImage(URL(string: area.strMealThumb ?? fallBackImg))
+                                        KFImage(URL(string: area.strMealThumb ?? Help.fallBackImg))
                                             .resizable()
                                             .scaledToFit()
                                             .clipShape(Circle())
@@ -161,7 +150,7 @@ struct SearchResultView: View {
                                             DetailView(forId: cat.idMeal, usingModel: DVModel, with: $unifiedResult)
                                         }
                                     } label: {
-                                        KFImage(URL(string: cat.strMealThumb ?? fallBackImg))
+                                        KFImage(URL(string: cat.strMealThumb ?? Help.fallBackImg))
                                             .resizable()
                                             .scaledToFit()
                                             .clipShape(Circle())
@@ -204,7 +193,7 @@ struct SearchResultView: View {
                                             DetailView(forId: ing.idMeal ?? "", usingModel: DVModel, with: $unifiedResult)
                                         }
                                     } label: {
-                                        KFImage(URL(string: ing.strMealThumb ?? fallBackImg))
+                                        KFImage(URL(string: ing.strMealThumb ?? Help.fallBackImg))
                                             .resizable()
                                             .scaledToFit()
                                             .clipShape(Circle())
