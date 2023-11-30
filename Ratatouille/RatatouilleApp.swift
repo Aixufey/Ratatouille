@@ -32,7 +32,9 @@ struct RatatouilleApp: App {
     @StateObject private var unifiedModelData = UnifiedModelData()
     // Controller for CRUD on main thread
     let persistenceController = PersistenceController.shared
-    
+    // Shared DB results
+    @StateObject private var sharedDbData = SharedDBData(context: PersistenceController.shared.container.viewContext)
+
     var body: some Scene {
         WindowGroup {
             TabBarView()
@@ -40,6 +42,7 @@ struct RatatouilleApp: App {
                 .font(.custom(CustomFont.ComicBoldItalic.name, size: 20))
                 .environmentObject(settings)
                 .environmentObject(unifiedModelData)
+                .environmentObject(sharedDbData)
                 .preferredColorScheme(settings.isDarkMode ? .dark : .light)
         }
     }

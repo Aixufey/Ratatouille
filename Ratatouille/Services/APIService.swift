@@ -92,7 +92,7 @@ struct APIService {
      */
     func fetchList<T: Codable>(endpoint: ListEndpoints) async throws -> T {
         let request = await endpoint.constructUrl()
-        print("wtf is \(request)")
+        // print("wth is \(request)")
         guard let url = URL(string: request) else {
             throw Errors.statusCode(400)
         }
@@ -140,10 +140,10 @@ struct APIService {
     /**
      Fetch meal details by id
      */
-    func getDetails(for idMeal: String) async throws -> Meal {
+    func getDetails(for idMeal: String) async throws -> MealDTO {
         // print("getDetail for: \(idMeal)")
         do {
-            let mealItems: Meal = try await fetchWith(endpoint: .byId, input: idMeal)
+            let mealItems: MealDTO = try await fetchWith(endpoint: .byId, input: idMeal)
             return mealItems
         } catch {
             throw Errors.unknown(underlying: error)

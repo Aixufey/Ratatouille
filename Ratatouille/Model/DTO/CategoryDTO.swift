@@ -8,7 +8,7 @@
 import Foundation
 
 // May serialise neither protocls
-struct Category: Codable, SearchResult {
+struct CategoryDTO: Codable, SearchResult {
     var meals: [CategoryItems]?
     var categories: [AllCategories]?
 }
@@ -39,7 +39,7 @@ struct AllCategories: Identifiable, Codable, NameProvider {
     var strCategoryDescription: String?
 }
 
-extension Category {
+extension CategoryDTO {
     static let dummy = [
         AllCategories(idCategory: "1" ,strCategory: "italiano"),
         AllCategories(idCategory: "2" ,strCategory: "seafood"),

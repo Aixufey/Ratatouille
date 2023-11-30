@@ -11,7 +11,7 @@ struct LandAreasView: View {
     @EnvironmentObject private var settings: AppSettings
     var body: some View {
         List {
-            ForEach(Area.dummy, id: \.hashValue) {area in
+            ForEach(AreaDTO.dummy, id: \.hashValue) {area in
                 NavigationLink(destination: CategoryDetailView()) {
                     SettingsRowView(for: area)
                 }

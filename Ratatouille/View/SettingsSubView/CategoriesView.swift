@@ -11,7 +11,7 @@ struct CategoriesView: View {
     @EnvironmentObject private var settings: AppSettings
     var body: some View {
         List {
-            ForEach(Category.dummy) {category in
+            ForEach(CategoryDTO.dummy) {category in
                 NavigationLink(destination: CategoryDetailView()) {
                     SettingsRowView(for: category)
                 }

@@ -54,6 +54,7 @@ struct PersistenceController {
                  */
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
+            print(storeDescription)
         })
         container.viewContext.automaticallyMergesChangesFromParent = true
         // Merging on constraint by object property

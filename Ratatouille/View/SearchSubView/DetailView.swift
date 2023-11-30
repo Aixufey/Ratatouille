@@ -42,7 +42,7 @@ struct DetailView: View {
                 HStack {
                     Text("Meal ID \(details.idMeal) - \(details.strArea)")
                         .padding()
-                    KFImage(URL(string: Flag.countryCode(forArea: details.strArea)))
+                    KFImage(URL(string: FlagDTO.countryCode(forArea: details.strArea)))
                         .resizable()
                         .scaledToFit()
                         .frame(width: 44)
@@ -102,7 +102,7 @@ struct DetailView: View {
 struct DetailView_Previews: PreviewProvider {
     struct Wrapper: View {
         @State private var unified = UnifiedModel(
-            meal: Meal(meals: [
+            meal: MealDTO(meals: [
                 MealItems(
                     idMeal: "52834",
                     strMeal: "Beef stroganoff",

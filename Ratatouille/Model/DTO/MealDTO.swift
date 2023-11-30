@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Meal: Codable, SearchResult {
+struct MealDTO: Codable, SearchResult {
     var meals: [MealItems]?
 }
 
