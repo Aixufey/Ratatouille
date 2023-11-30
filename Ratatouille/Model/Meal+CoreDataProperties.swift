@@ -15,7 +15,9 @@ extension Meal {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Meal> {
         return NSFetchRequest<Meal>(entityName: "Meal")
     }
-
+    
+    @NSManaged public var isFavorite: Bool
+    @NSManaged public var flagURL: String?
     @NSManaged public var idMeal: String?
     @NSManaged public var strMeal: String?
     @NSManaged public var strCategory: String?
@@ -26,7 +28,19 @@ extension Meal {
     @NSManaged public var ingredients: NSSet?
     @NSManaged public var area: Area?
     @NSManaged public var category: Category?
+    
+    
+    public var wrappedName: String {
+        strMeal ?? "Unknown Meal"
+    }
 
+    public var ingredientsArray: [Ingredient] {
+        let set = ingredients as? Set<Ingredient> ?? []
+        
+        return set.sorted {
+            $0.wrappedName < $1.wrappedName
+        }
+    }
 }
 
 // MARK: Generated accessors for ingredients

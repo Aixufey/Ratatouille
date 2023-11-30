@@ -92,7 +92,7 @@ struct APIService {
      */
     func fetchList<T: Codable>(endpoint: ListEndpoints) async throws -> T {
         let request = await endpoint.constructUrl()
-        print("wtf is \(request)")
+        // print("wth is \(request)")
         guard let url = URL(string: request) else {
             throw Errors.statusCode(400)
         }

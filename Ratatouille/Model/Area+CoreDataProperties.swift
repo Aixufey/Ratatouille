@@ -18,6 +18,20 @@ extension Area {
 
     @NSManaged public var strArea: String?
     @NSManaged public var meals: NSSet?
+    
+    public var wrappedName: String {
+        strArea ?? "Unknown Area"
+    }
+    
+    public var mealsArray: [Meal] {
+        // Safe typecast as Set
+        let set = meals as? Set<Meal> ?? []
+        // When sorted it will be an array
+        // Compare the lexicographical order in a closure with Meal 1 and Meal 2.
+        return set.sorted {
+            $0.wrappedName < $1.wrappedName
+        }
+    }
 
 }
 

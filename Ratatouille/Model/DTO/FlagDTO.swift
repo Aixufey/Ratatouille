@@ -43,12 +43,12 @@ class FlagDTO: Identifiable {
      Fetching based on name
      */
     static func countryCode(forArea area: String) -> String {
-        //print("area is \(area)")
+        print("area is \(area)")
         if let value = countriesMap[area] {
-            //print("value is \(value)")
+            print("value is \(value)")
             return "https://flagsapi.com/\(value)/shiny/64.png"
         } else {
-            //print("invalid country \(area)")
+            print("invalid country \(area)")
             return "https://cdn-icons-png.flaticon.com/512/2072/2072130.png"
         }
     }

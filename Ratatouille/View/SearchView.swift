@@ -86,6 +86,20 @@ struct SearchView: View {
     private func handleDisplay(_ status: Bool) {
         self.isEmptyResult.isEmpty = status
     }
+//    private func deleteItems(offsets: IndexSet) {
+//        withAnimation {
+//            offsets.map { areas[$0] }.forEach(moc.delete)
+//            
+//            do {
+//                try moc.save()
+//            } catch {
+//                // Replace this implementation with code to handle the error appropriately.
+//                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//                let nsError = error as NSError
+//                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+//            }
+//        }
+//    }
     
     var body: some View {
         VStack {
@@ -118,6 +132,34 @@ struct SearchView: View {
             Text("Søk")
                 .font(.custom(CustomFont.ComicBold.name, size: 35))
             Spacer()
+//            VStack {
+//                List {
+//                    ForEach(areas, id: \.self) { area in
+//                        Section(area.wrappedName) {
+//                            ForEach(area.mealsArray, id: \.self) { meal in
+//                                Text(meal.wrappedName)
+//                            }
+//                        }
+//                    }.onDelete(perform: deleteItems)
+//                }
+//                Button("Add Examples") {
+//                    let russian = Area(context: moc)
+//                    russian.strArea = "Russian"
+//
+//                    let meal1 = Meal(context: moc)
+//                    meal1.strMeal = "Pilaf"
+//                    meal1.area = russian
+//
+//                    let meal2 = Meal(context: moc)
+//                    meal2.strMeal = "Beef stroganoff"
+//                    meal2.area = russian
+//
+//                    let meal3 = Meal(context: moc)
+//                    meal3.strMeal = "Borscht"
+//                    meal3.area = russian
+//                    try? moc.save()
+//                }
+//            }
             
             // Pass the binding generic protocol
             SearchResultView(currentSearchResult: $unifiedResult, API)
