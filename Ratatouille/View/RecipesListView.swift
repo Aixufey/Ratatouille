@@ -28,6 +28,15 @@ struct RecipesListView: View {
             db.fetchMeal()
         }
     }
+    func handleArchive(for id: String) throws {
+        let request = Meal.fetchRequest()
+        request.predicate = NSPredicate(format: "idMeal == %@", id)
+        if let meal = try? moc.fetch(request), let mealToArchive = meal.first {
+            mealToArchive.isArchive.toggle()
+            try moc.save()
+            db.fetchMeal()
+        }
+    }
     var body: some View {
         VStack {
             VStack {
@@ -166,6 +175,15 @@ struct RecipesListView: View {
                                     } label: {
                                         Image(systemName: "star.fill")
                                     }.tint(Color(.systemYellow))
+                                }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button {
+                                        Task {
+                                            try? handleArchive(for: meal.wrappedId)
+                                        }
+                                    } label: {
+                                        Image(systemName: "tray.and.arrow.down")
+                                    }.tint(Color.accentColor)
                                 }
                             } // foreach
                         } // List

@@ -16,6 +16,7 @@ extension Meal {
         return NSFetchRequest<Meal>(entityName: "Meal")
     }
     
+    @NSManaged public var isArchive: Bool
     @NSManaged public var isFavorite: Bool
     @NSManaged public var flagURL: String?
     @NSManaged public var idMeal: String?
