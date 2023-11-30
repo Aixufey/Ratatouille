@@ -16,6 +16,7 @@ extension Meal {
         return NSFetchRequest<Meal>(entityName: "Meal")
     }
     
+    @NSManaged public var timeStamp: Date
     @NSManaged public var isArchive: Bool
     @NSManaged public var isFavorite: Bool
     @NSManaged public var flagURL: String?
@@ -48,6 +49,15 @@ extension Meal {
     }
     public var wrappedThumb: String {
         strMealThumb ?? Help.fallBackImg
+    }
+    public var wrappedtimeStamp: String {
+        let df = DateFormatter()
+        //df.dateStyle = .medium
+        //df.timeStyle = .medium
+        //df.dateFormat = "d MMM, yyyy 'kl' HH:mm:ss"
+        df.dateFormat = "d MMM, yyyy 'kl' hh:mm:ss a"
+        df.locale = Locale(identifier: "en_US")
+        return df.string(from: timeStamp)
     }
 
 

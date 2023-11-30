@@ -18,23 +18,24 @@ struct RecipesListView: View {
     @State private var isRecipes: Bool = false
     @State private var isInstruction: Bool = false
     @State private var isIngredient: Bool = false
-    func updateFavoriteDB(for id: String) throws {
-        let request = Meal.fetchRequest()
-        request.predicate = NSPredicate(format: "idMeal == %@", id)
-        if let meal = try? moc.fetch(request), let mealToUpdate = meal.first {
-            //print(meal)
-            mealToUpdate.isFavorite.toggle()
-            try? moc.save()
-            db.fetchMeal()
-        }
-    }
-    func handleArchive(for id: String) throws {
-        let request = Meal.fetchRequest()
-        request.predicate = NSPredicate(format: "idMeal == %@", id)
-        if let meal = try? moc.fetch(request), let mealToArchive = meal.first {
-            mealToArchive.isArchive.toggle()
+    func toggleFavoriteMeal(_ meal: Meal) {
+        meal.isFavorite.toggle()
+        do {
             try moc.save()
             db.fetchMeal()
+        } catch {
+            print("Error toggle meal", error)
+        }
+    }
+    func archiveMeal(_ meal: Meal) {
+        meal.isArchive.toggle()
+        meal.timeStamp = Date()
+        do {
+            try moc.save()
+            db.fetchMeal()
+            db.fetchArchive()
+        } catch {
+            print("Error archiving meal ", error)
         }
     }
     var body: some View {
@@ -69,7 +70,7 @@ struct RecipesListView: View {
                             .environmentObject(UnifiedModelData().self)
                     }.padding(.top)
                 } else {
-                    if db.meals.isEmpty {
+                    if db.activeMeals.isEmpty {
                         VStack(alignment: .center) {
                             Image(systemName: "square.3.layers.3d.slash")
                                 .imageScale(.large).font(.system(size: 65))
@@ -77,7 +78,7 @@ struct RecipesListView: View {
                         }
                     } else {
                         List {
-                            ForEach(db.meals, id: \.self) { meal in
+                            ForEach(db.activeMeals, id: \.idMeal) { meal in
                                 NavigationLink {
                                     ScrollView {
                                         VStack {
@@ -165,21 +166,21 @@ struct RecipesListView: View {
                                 }
                                 .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                     Button {
-                                        Task {
-                                            withAnimation(.easeInOut(duration: 0.33)) {
-                                                
-                                                try? updateFavoriteDB(for: meal.wrappedId)
+                                        withAnimation(.easeOut(duration: 0.5)) {
+                                            DispatchQueue.main.async {
+                                                toggleFavoriteMeal(meal)
                                             }
                                         }
-                                        
                                     } label: {
                                         Image(systemName: "star.fill")
                                     }.tint(Color(.systemYellow))
                                 }
                                 .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                     Button {
-                                        Task {
-                                            try? handleArchive(for: meal.wrappedId)
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            DispatchQueue.main.async {
+                                                archiveMeal(meal)
+                                            }
                                         }
                                     } label: {
                                         Image(systemName: "tray.and.arrow.down")
