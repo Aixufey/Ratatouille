@@ -132,34 +132,6 @@ struct SearchView: View {
             Text("Søk")
                 .font(.custom(CustomFont.ComicBold.name, size: 35))
             Spacer()
-//            VStack {
-//                List {
-//                    ForEach(areas, id: \.self) { area in
-//                        Section(area.wrappedName) {
-//                            ForEach(area.mealsArray, id: \.self) { meal in
-//                                Text(meal.wrappedName)
-//                            }
-//                        }
-//                    }.onDelete(perform: deleteItems)
-//                }
-//                Button("Add Examples") {
-//                    let russian = Area(context: moc)
-//                    russian.strArea = "Russian"
-//
-//                    let meal1 = Meal(context: moc)
-//                    meal1.strMeal = "Pilaf"
-//                    meal1.area = russian
-//
-//                    let meal2 = Meal(context: moc)
-//                    meal2.strMeal = "Beef stroganoff"
-//                    meal2.area = russian
-//
-//                    let meal3 = Meal(context: moc)
-//                    meal3.strMeal = "Borscht"
-//                    meal3.area = russian
-//                    try? moc.save()
-//                }
-//            }
             
             // Pass the binding generic protocol
             SearchResultView(currentSearchResult: $unifiedResult, API)

@@ -33,6 +33,22 @@ extension Meal {
     public var wrappedName: String {
         strMeal ?? "Unknown Meal"
     }
+    public var wrappedId: String {
+        idMeal ?? "Impossible"
+    }
+    public var wrappedFlagURL: String {
+        flagURL ?? "https://cdn-icons-png.flaticon.com/512/2072/2072130.png"
+    }
+    public var wrappedCategory: String {
+        strCategory ?? "Unknown Category"
+    }
+    public var wrappedArea: String {
+        strArea ?? "Unknown Area"
+    }
+    public var wrappedThumb: String {
+        strMealThumb ?? Help.fallBackImg
+    }
+
 
     public var ingredientsArray: [Ingredient] {
         let set = ingredients as? Set<Ingredient> ?? []

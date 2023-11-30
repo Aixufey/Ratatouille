@@ -28,6 +28,8 @@ class SharedDBData: ObservableObject {
     
     func fetchMeal() {
         let req: NSFetchRequest<Meal> = Meal.fetchRequest()
+        let sortFav = [NSSortDescriptor(key: "isFavorite", ascending: false)]
+        req.sortDescriptors = sortFav
         do {
             meals = try context.fetch(req)
         } catch {
