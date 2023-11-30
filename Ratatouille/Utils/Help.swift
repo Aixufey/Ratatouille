@@ -8,6 +8,7 @@
 import Foundation
 
 class Help {
+    static let fallBackImg: String = "https://cdn-icons-png.flaticon.com/512/2276/2276931.png"
     static func findFirstCharacter(of input: String) -> String {
         guard let firstChar = input.first else {
             return ""

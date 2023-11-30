@@ -19,6 +19,7 @@
     <entity name="Meal" representedClassName="Meal" syncable="YES">
         <attribute name="flagURL" optional="YES" attributeType="String"/>
         <attribute name="idMeal" optional="YES" attributeType="String"/>
+        <attribute name="isArchive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="isFavorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="strArea" optional="YES" attributeType="String"/>
         <attribute name="strCategory" optional="YES" attributeType="String"/>
@@ -26,6 +27,7 @@
         <attribute name="strMeal" optional="YES" attributeType="String"/>
         <attribute name="strMealThumb" optional="YES" attributeType="String"/>
         <attribute name="strYoutube" optional="YES" attributeType="String"/>
+        <attribute name="timeStamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="area" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Area" inverseName="meals" inverseEntity="Area"/>
         <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="meals" inverseEntity="Category"/>
         <relationship name="ingredients" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MealIngredient" inverseName="meal" inverseEntity="MealIngredient"/>

@@ -9,7 +9,8 @@ import Foundation
 import CoreData
 
 class SharedDBData: ObservableObject {
-    @Published var meals: [Meal] = []
+    @Published var activeMeals: [Meal] = []
+    @Published var archivedMeals: [Meal] = []
     @Published var areas: [Area] = []
     @Published var categories: [Category] = []
     @Published var ingredients: [Ingredient] = []
@@ -20,6 +21,7 @@ class SharedDBData: ObservableObject {
     init(context: NSManagedObjectContext) {
         self.context = context
         fetchMeal()
+        fetchArchive()
         fetchArea()
         fetchCategory()
         fetchIngredient()
@@ -28,10 +30,27 @@ class SharedDBData: ObservableObject {
     
     func fetchMeal() {
         let req: NSFetchRequest<Meal> = Meal.fetchRequest()
+        let sortFav = [NSSortDescriptor(key: "isFavorite", ascending: false)]
+        let predicate = NSPredicate(format: "isArchive == false")
+        req.sortDescriptors = sortFav
+        req.predicate = predicate
         do {
-            meals = try context.fetch(req)
+            activeMeals = try context.fetch(req)
         } catch {
-            print("Error fetching \(meals.description)", error)
+            print("Error fetching \(activeMeals.description)", error)
+        }
+    }
+    
+    func fetchArchive() {
+        let req: NSFetchRequest<Meal> = Meal.fetchRequest()
+        let sortFav = [NSSortDescriptor(key: "isFavorite", ascending: false)]
+        let pred = NSPredicate(format: "isArchive == true")
+        req.sortDescriptors = sortFav
+        req.predicate = pred
+        do {
+            archivedMeals = try context.fetch(req)
+        } catch {
+            print("Error fetching archive \(activeMeals.description)", error)
         }
     }
     
