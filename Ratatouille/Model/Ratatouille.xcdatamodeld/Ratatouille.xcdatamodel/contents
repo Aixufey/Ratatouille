@@ -3,15 +3,30 @@
     <entity name="Area" representedClassName="Area" syncable="YES">
         <attribute name="strArea" optional="YES" attributeType="String"/>
         <relationship name="meals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Meal" inverseName="area" inverseEntity="Meal"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="strArea"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="Category" representedClassName="Category" syncable="YES">
         <attribute name="strCategory" optional="YES" attributeType="String"/>
         <relationship name="meals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Meal" inverseName="category" inverseEntity="Meal"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="strCategory"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="Ingredient" representedClassName="Ingredient" syncable="YES">
         <attribute name="idIngredient" optional="YES" attributeType="String"/>
         <attribute name="strIngredient" optional="YES" attributeType="String"/>
         <relationship name="meals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MealIngredient" inverseName="ingredient" inverseEntity="MealIngredient"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="strIngredient"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
