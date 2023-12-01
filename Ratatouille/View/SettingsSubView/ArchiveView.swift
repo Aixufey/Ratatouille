@@ -133,7 +133,7 @@ struct ArchiveView_Previews: PreviewProvider {
         ArchiveView()
             .environmentObject(AppSettings().self)
             .environmentObject(SharedDBData(context: PersistenceController.shared.container.viewContext))
-            .environmentObject(IsEmptyResult().self)
+            .environmentObject(SearchObject().self)
             .environmentObject(UnifiedModelData().self)
     }
 }

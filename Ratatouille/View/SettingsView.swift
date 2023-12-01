@@ -10,61 +10,65 @@ import SwiftUI
 
 struct SettingsView: View {
     // Accessing instance of StateObject
+    @Environment(\.managedObjectContext) private var moc
+    @EnvironmentObject private var db: SharedDBData
     @EnvironmentObject private var settings: AppSettings
-
-    
+    @EnvironmentObject private var searchObj: SearchObject
+    @State private var isSheet: Bool = false
+    @State private var title = ""
     var body: some View {
         
-        NavigationView {
+        NavigationStack {
             List {
                 // Miscellaneous
                 Section {
-                    Button {
-                    } label: {
-                        HStack {
-                            Image(systemName: settings.isDarkMode ? "globe.central.south.asia" : "globe.central.south.asia.fill")
-                                .frame(width:30, alignment: .center)
-                            Text("Redigere landområder")
+                    NavigationLink(destination:
+                                    SettingDetailView(for: $isSheet, title: "Landområder")
+                        .onDisappear {
+                            searchObj.resetResult()
                         }
-                    }
-                    .background(
-                        NavigationLink {
-                            LandAreasView()
-                        } label: {
-                            EmptyView()
-                            // Hack to hide indications ">" lol
-                        }.opacity(0)
-                    )
-                    Button {
-                    } label: {
-                        HStack {
-                            Image(systemName: settings.isDarkMode ? "doc.plaintext" : "doc.plaintext.fill")
-                                .frame(width: 30, alignment: .center)
-                            Text("Redigere kategorier")
+                        .onAppear { self.title = "Landområder" }
+                        .environmentObject(db)
+                        .environmentObject(searchObj)) {
+                            HStack {
+                                Image(systemName: settings.isDarkMode ? "globe.central.south.asia" : "globe.central.south.asia.fill")
+                                    .frame(width: 30, alignment: .center)
+                                Text("Redigere landområder")
+                            }
+                        }.foregroundColor(.blue)
+                        
+                    
+                    NavigationLink(destination:
+                                    SettingDetailView(for: $isSheet, title: "Kategorier")
+                        .onDisappear {
+                            searchObj.resetResult()
                         }
-                    }
-                    .background(
-                        NavigationLink {
-                            CategoriesView()
-                        } label: {
-                            EmptyView()
-                        }.opacity(0)
-                    )
-                    Button {
-                    } label: {
-                        HStack {
-                            Image(systemName: settings.isDarkMode ? "carrot" : "carrot.fill")
-                                .frame(width: 30, alignment: .center)
-                            Text("Redigere ingredienser")
+                        .onAppear { self.title = "Kategorier" }
+                        .environmentObject(db)
+                        .environmentObject(searchObj)) {
+                            HStack {
+                                Image(systemName: settings.isDarkMode ? "doc.plaintext" : "doc.plaintext.fill")
+                                    .frame(width: 30, alignment: .center)
+                                Text("Redigere kategorier")
+                            }
+                        }.foregroundColor(.blue)
+                        .onDisappear {searchObj.resetResult()}
+                    
+                    NavigationLink(destination:
+                                    SettingDetailView(for: $isSheet, title: "Ingredienser")
+                        .onDisappear {
+                            searchObj.resetResult()
                         }
-                    }
-                    .background(
-                        NavigationLink {
-                            IngredientsView()
-                        } label: {
-                            EmptyView()
-                        }.opacity(0)
-                    )
+                        .onAppear { self.title = "Ingredienser" }
+                        .environmentObject(db)
+                        .environmentObject(searchObj)) {
+                            HStack {
+                                Image(systemName: settings.isDarkMode ? "carrot" : "carrot.fill")
+                                    .frame(width: 30, alignment: .center)
+                                Text("Redigere ingredienser")
+                            }
+                        }.foregroundColor(.blue)
+                        .onDisappear {searchObj.resetResult()}
                 }
                 // Dark mode
                 Section {
@@ -99,6 +103,11 @@ struct SettingsView: View {
             .navigationTitle("Innstillinger")
             .imageScale(.large)
         } // NavView
+        .sheet(isPresented: $isSheet) {
+            ExtractedView(isSheet: $isSheet, title: $title)
+                .environmentObject(searchObj)
+                .environmentObject(settings)
+        }
         .preferredColorScheme(settings.isDarkMode ? .dark : .light)
     }
 }
@@ -106,7 +115,134 @@ struct SettingsView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView()
-            .environmentObject(AppSettings().self)
-            .environmentObject(UnifiedModelData().self)
+            .environmentObject(SharedDBData(context: PersistenceController.shared.container.viewContext))
+            .environmentObject(SearchObject())
+            .environmentObject(AppSettings())
+            .environmentObject(UnifiedModelData())
     }
 }
+
+struct ExtractedView: View {
+    @EnvironmentObject private var searchObj: SearchObject
+    @EnvironmentObject private var settings: AppSettings
+    @Binding private var isSheet: Bool
+    @Binding private var title: String
+    init(isSheet: Binding<Bool> = .constant(false), title: Binding<String> = .constant("Not set")) {
+        self._isSheet = isSheet
+        self._title = title
+    }
+    var body: some View {
+        VStack(alignment: .center) {
+            HStack {
+                Text("Avbryt")
+                    .onTapGesture {
+                        isSheet.toggle()
+                    }
+                    .foregroundColor(Color(.systemBlue))
+                Spacer()
+                Text(title)
+                Spacer()
+                Image(systemName: "magnifyingglass.circle.fill")
+                    .font(.system(size: 35))
+                    .onTapGesture {
+                        
+                    }
+                    .foregroundColor(Color(.systemBlue))
+            }
+            .padding()
+            Spacer()
+            ZStack(alignment: .leading) {
+                Text("Se alle \(title.lowercased())")
+                    .onTapGesture {
+                        Task { @MainActor in
+                            isSheet.toggle()
+                            do {
+                                if title == "Landområder" {
+                                    
+                                    let result: AreaDTO = try await APIService.shared.fetchList(endpoint: .allAreas)
+                                    searchObj.currentResult.area = result
+                                    //print(searchObj.currentResult.area)
+                                } else if title == "Kategorier" {
+                                    let result: CategoryDTO = try await APIService.shared.fetchList(endpoint: .allCategories)
+                                    searchObj.currentResult.category = result
+                                    //print(searchObj.currentResult.category)
+                                } else if title == "Ingredienser" {
+                                    let result: IngredientDTO = try await APIService.shared.fetchList(endpoint: .allIngredients)
+                                    searchObj.currentResult.ingredient = result
+                                    //print(searchObj.currentResult.ingredient)
+                                }
+                            }
+                        }
+                    }
+            }
+            .frame(width: 300 , height: 60)
+            .background(Rectangle().foregroundColor(Color(.systemGray5)))
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.gray, lineWidth: 2)
+            )
+            .padding(.bottom, 35)
+        }
+        .presentationDetents([.fraction(0.3)])
+    }
+}
+
+//struct ExtractedView: View {
+//    @EnvironmentObject private var searchObj: SearchObject
+//    @EnvironmentObject private var settings: AppSettings
+//    @Binding private var isSheet: Bool
+//    @Binding private var title: String
+//    init(isSheet: Binding<Bool> = .constant(false), title: Binding<String> = .constant("Not set")) {
+//        self._isSheet = isSheet
+//        self._title = title
+//    }
+//    var body: some View {
+//        VStack(alignment: .center) {
+//            HStack {
+//                Text("Avbryt")
+//                    .onTapGesture {
+//                        isSheet.toggle()
+//                    }
+//                    .foregroundColor(Color(.systemBlue))
+//                Spacer()
+//                Text(title)
+//                Spacer()
+//                Text("Søk")
+//                    .onTapGesture {
+//                        if !searchObj.currentInput.isEmpty {
+//                            isSheet.toggle()
+//                            Task { @MainActor in
+//                                do {
+//                                    let result: AreaDTO = try await APIService.shared.fetchList(endpoint: .allAreas)
+//
+//                                }
+//                            }
+//                        }
+//                        print(searchObj.currentInput)
+//                    }
+//                    .foregroundColor(Color(.systemBlue))
+//            }
+//            .padding()
+//            Spacer()
+//            ZStack(alignment: .leading) {
+//                Text("Søk...")
+//                    .padding(.leading, 10)
+//                    .foregroundColor(settings.isDarkMode ? .white : .black)
+//                    .opacity(searchObj.currentInput.isEmpty ? 1 : 0)
+//                TextField("", text: $searchObj.currentInput)
+//                    .padding(.leading, 10)
+//                    .autocorrectionDisabled()
+//            }
+//            .frame(width: 300 , height: 60)
+//            .background(Rectangle().foregroundColor(Color(.systemGray5)))
+//            .cornerRadius(10)
+//            .overlay(
+//                RoundedRectangle(cornerRadius: 10)
+//                    .stroke(Color.gray, lineWidth: 2)
+//            )
+//            .padding(.bottom, 35)
+//        }
+//        .presentationDetents([.fraction(0.3)])
+//    }
+//}
