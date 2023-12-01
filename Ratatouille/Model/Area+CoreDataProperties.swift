@@ -16,7 +16,9 @@ extension Area {
         return NSFetchRequest<Area>(entityName: "Area")
     }
 
+    @NSManaged public var timeStamp: Date
     @NSManaged public var strArea: String?
+    @NSManaged public var isArchive: Bool
     @NSManaged public var meals: NSSet?
     
     public var wrappedName: String {
@@ -31,6 +33,12 @@ extension Area {
         return set.sorted {
             $0.wrappedName < $1.wrappedName
         }
+    }
+    public var wrappedTimeStamp: String {
+        let df = DateFormatter()
+        df.dateFormat = "d MMM, yyyy 'kl' hh:mm:ss a"
+        df.locale = Locale(identifier: "en_US")
+        return df.string(from: timeStamp)
     }
 }
 

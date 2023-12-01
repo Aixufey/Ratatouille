@@ -76,10 +76,46 @@ struct SettingDetailView: View {
             print("Error save area ",error)
         }
     }
+    func archiveIngredient(_ ingredient: Ingredient) {
+        ingredient.isArchive.toggle()
+        ingredient.timeStamp = Date()
+        do {
+            try moc.save()
+            db.fetchIngredient()
+            db.fetchArchivedIngredient()
+        } catch {
+            print("Error archiving ingredient ", error)
+        }
+    }
+    func archiveCategory(_ category: Category) {
+        print("archive area \(category.wrappedName)")
+        category.isArchive.toggle()
+        category.timeStamp = Date()
+        do {
+            try moc.save()
+            db.fetchCategory()
+            db.fetchArchivedCategory()
+        } catch {
+            print("Error archiving category ", error)
+        }
+    }
+    func archiveArea(_ area: Area) {
+        print("archive area \(area.wrappedName)")
+        area.isArchive.toggle()
+        area.timeStamp = Date()
+        do {
+            try moc.save()
+            db.fetchArea()
+            db.fetchArchivedArea()
+        } catch {
+            print("Error archiving area ", error)
+        }
+    }
     var body: some View {
         List {
             //  Show saved db or show searches
             if showArchive {
+                // Show DATABASE
                 if title == "Landområder", !db.areas.isEmpty {
                     ForEach(db.areas, id: \.self) { area in
                         Text(area.wrappedName)
@@ -92,6 +128,16 @@ struct SettingDetailView: View {
                                 } label: {
                                     Image(systemName: "square.and.pencil")
                                 }
+                            }
+                            .swipeActions(edge: .trailing) {
+                                Button {
+                                    Task { @MainActor in
+                                        print("area \(area.wrappedName)")
+                                        archiveArea(area)
+                                    }
+                                } label: {
+                                    Image(systemName: "tray.and.arrow.down.fill")
+                                }.tint(.accentColor)
                             }
                     }
                 }
@@ -106,6 +152,16 @@ struct SettingDetailView: View {
                                     }
                                 } label: {
                                     Image(systemName: "square.and.pencil")
+                                }
+                                .swipeActions(edge: .trailing) {
+                                    Button {
+                                        Task { @MainActor in
+                                            print("category \(cat.wrappedName)")
+                                            archiveCategory(cat)
+                                        }
+                                    } label: {
+                                        Image(systemName: "tray.and.arrow.down.fill")
+                                    }.tint(.accentColor)
                                 }
                             }
                     }
@@ -122,10 +178,21 @@ struct SettingDetailView: View {
                                 } label: {
                                     Image(systemName: "square.and.pencil")
                                 }
+                                .swipeActions(edge: .trailing) {
+                                    Button {
+                                        Task { @MainActor in
+                                            print("ingredient \(ing.wrappedName)")
+                                            archiveIngredient(ing)
+                                        }
+                                    } label: {
+                                        Image(systemName: "tray.and.arrow.down.fill")
+                                    }.tint(.accentColor)
+                                }
                             }
                     }
                 }
-            } else {
+            } else { // Else show searches from API
+                
                 if let areas: AreaDTO = searchObj.currentResult.area {
                     ForEach(areas.meals.indices, id: \.self) { index in
                         let area = areas.meals[index]
@@ -139,7 +206,7 @@ struct SettingDetailView: View {
                                     searchObj.currentResult.area?.meals.remove(at: index)
                                 }
                             } label: {
-                                Image(systemName: "tray.and.arrow.down.fill")
+                                Image(systemName: "square.grid.3x1.folder.fill.badge.plus")
                             }.tint(.accentColor)
                         }
                     }
@@ -158,7 +225,7 @@ struct SettingDetailView: View {
                                     searchObj.currentResult.category?.categories?.remove(at: index)
                                 }
                             }  label: {
-                                Image(systemName: "tray.and.arrow.down.fill")
+                                Image(systemName: "square.grid.3x1.folder.fill.badge.plus")
                             }.tint(.accentColor)
                         }
                     }
@@ -177,7 +244,7 @@ struct SettingDetailView: View {
                                     searchObj.currentResult.ingredient?.meals?.remove(at: index)
                                 }
                             }  label: {
-                                Image(systemName: "tray.and.arrow.down.fill")
+                                Image(systemName: "square.grid.3x1.folder.fill.badge.plus")
                             }.tint(.accentColor)
                         }
                     }
@@ -202,6 +269,7 @@ struct SettingDetailView: View {
                 Button {
                     isSheet.toggle()
                     //print(isSheet.description)
+                    showArchive.toggle()
                     
                 } label: {
                     HStack {

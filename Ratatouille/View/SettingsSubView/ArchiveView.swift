@@ -12,7 +12,7 @@ struct ArchiveView: View {
     @EnvironmentObject var db: SharedDBData
     @EnvironmentObject var settings: AppSettings
     @State private var dummies = ["Item 1", "Item 2", "Item 3"]
-    private func deleteItem(_ meal: Meal) {
+    private func deleteMeal(_ meal: Meal) {
         moc.delete(meal)
         do {
             try moc.save()
@@ -20,60 +20,151 @@ struct ArchiveView: View {
             print("Error deleting ", error)
             moc.rollback()
         }
-        db.fetchArchive()
+        db.fetchArchivedMeal()
     }
-    private func restoreItem(_ meal: Meal) {
+    private func deleteArea(_ area: Area) {
+        moc.delete(area)
+        do {
+            try moc.save()
+        } catch {
+            print("Error deleting ", error)
+            moc.rollback()
+        }
+        db.fetchArchivedArea()
+    }
+    private func restoreArea(_ area: Area) {
+        area.isArchive.toggle()
+        do {
+            try moc.save()
+        } catch {
+            print("Error restoring ", error)
+        }
+        db.fetchArchivedArea()
+        db.fetchArea()
+    }
+    private func restoreMeal(_ meal: Meal) {
         meal.isArchive.toggle()
         do {
             try moc.save()
         } catch {
             print("Error restoring ", error)
         }
-        db.fetchArchive()
+        db.fetchArchivedMeal()
         db.fetchMeal()
     }
     var body: some View {
         List {
             Section(header: Text("Landområder")) {
-                HStack {
-                    Image(systemName: settings.isDarkMode ? "archivebox" : "archivebox.fill")
-                        .frame(width: 30, alignment: .center)
-                    Text("Arkiv")
-                }.foregroundColor(.blue)
+                if db.archivedAreas.isEmpty {
+                    HStack {
+                        Image(systemName: settings.isDarkMode ? "archivebox" : "archivebox.fill")
+                            .frame(width: 30, alignment: .center)
+                        Text("Ingen arkiverte landområder")
+                    }.foregroundColor(.blue)
+                } else {
+                    ForEach(db.archivedAreas, id: \.id) { area in
+                        VStack(alignment: .leading) {
+                            Text(area.wrappedName)
+                            Text("Arkivert: \(area.wrappedTimeStamp)")
+                        }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.33)) {
+                                    DispatchQueue.main.async {
+                                        deleteArea(area)
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: "trash")
+                            }.tint(.red)
+                            
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    DispatchQueue.main.async {
+                                        restoreArea(area)
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: "tray.and.arrow.up")
+                            }
+                        }
+                    }
+                }
             }
             
             Section(header: Text("Kategorier")) {
-                HStack {
-                    Image(systemName: settings.isDarkMode ? "doc.plaintext" : "doc.plaintext.fill")
-                        .frame(width: 30, alignment: .center)
-                    Text("Ingen arkiverte kategorier")
-                }.foregroundColor(.blue)
+                if db.archivedCategories.isEmpty {
+                    HStack {
+                        Image(systemName: settings.isDarkMode ? "doc.plaintext" : "doc.plaintext.fill")
+                            .frame(width: 30, alignment: .center)
+                        Text("Ingen arkiverte kategorier")
+                    }.foregroundColor(.blue)
+                } else {
+                    ForEach(db.archivedCategories, id: \.id) { cat in
+                        VStack(alignment: .leading) {
+                            Text(cat.wrappedName)
+                            Text("Arkivert: \(cat.wrappedTimeStamp)")
+                        }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.33)) {
+                                    DispatchQueue.main.async {
+                                        
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: "trash")
+                            }.tint(.red)
+                            
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    DispatchQueue.main.async {
+                                        
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: "tray.and.arrow.up")
+                            }
+                        }
+                    }
+                }
             }
             
             Section(header: Text("Ingredienser")) {
-                if !dummies.isEmpty {
-                    ForEach(dummies.indices, id: \.self) { index in
-                        Text(dummies[index])
-                            .swipeActions(edge: .trailing) {
-                                Button {
-                                    deleteItem(at: index)
-                                } label: {
-                                    Image(systemName: "trash")
-                                    
-                                }.tint(.red)
-                                Button {
-                                    restoreItem(for: dummies[index])
-                                } label: {
-                                    Image(systemName: settings.isDarkMode ? "tray.and.arrow.up.fill" : "tray.and.arrow.up")
-                                }
-                            }
-                    }
-                } else {
+                if db.archivedIngredients.isEmpty {
                     HStack {
                         Image(systemName: settings.isDarkMode ? "carrot" : "carrot.fill")
                             .frame(width: 30, alignment: .center)
                         Text("Ingen arkiverte ingredienser")
                     }.foregroundColor(.blue)
+                } else {
+                    ForEach(db.archivedIngredients, id: \.idIngredient) { ing in
+                        VStack(alignment: .leading) {
+                            Text(ing.wrappedName)
+                            Text("Arkivert: \(ing.wrappedTimeStamp)")
+                        }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.33)) {
+                                    DispatchQueue.main.async {
+                                        
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: "trash")
+                            }.tint(.red)
+                            
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    DispatchQueue.main.async {
+                                        
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: "tray.and.arrow.up")
+                            }
+                        }
+                    }
                 }
             }
             
@@ -94,7 +185,7 @@ struct ArchiveView: View {
                             Button {
                                 withAnimation(.easeInOut(duration: 0.33)) {
                                     DispatchQueue.main.async {
-                                        deleteItem(meal)
+                                        deleteMeal(meal)
                                     }
                                 }
                             } label: {
@@ -104,7 +195,7 @@ struct ArchiveView: View {
                             Button {
                                 withAnimation(.easeInOut(duration: 0.3)) {
                                     DispatchQueue.main.async {
-                                        restoreItem(meal)
+                                        restoreMeal(meal)
                                     }
                                 }
                             } label: {

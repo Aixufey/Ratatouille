@@ -13,8 +13,11 @@ class SharedDBData: ObservableObject {
     @Published var activeMeals: [Meal] = []
     @Published var archivedMeals: [Meal] = []
     @Published var areas: [Area] = []
+    @Published var archivedAreas: [Area] = []
     @Published var categories: [Category] = []
+    @Published var archivedCategories:[Category] = []
     @Published var ingredients: [Ingredient] = []
+    @Published var archivedIngredients: [Ingredient] = []
     @Published var mealIngredients: [MealIngredient] = []
     
     private var context: NSManagedObjectContext
@@ -22,10 +25,13 @@ class SharedDBData: ObservableObject {
     init(context: NSManagedObjectContext) {
         self.context = context
         fetchMeal()
-        fetchArchive()
+        fetchArchivedMeal()
         fetchArea()
+        fetchArchivedArea()
         fetchCategory()
+        fetchArchivedCategory()
         fetchIngredient()
+        fetchArchivedIngredient()
         fetchMealIngredient()
     }
     
@@ -42,7 +48,7 @@ class SharedDBData: ObservableObject {
         }
     }
     
-    func fetchArchive() {
+    func fetchArchivedMeal() {
         let req: NSFetchRequest<Meal> = Meal.fetchRequest()
         let sortFav = [NSSortDescriptor(key: "isFavorite", ascending: false)]
         let pred = NSPredicate(format: "isArchive == true")
@@ -57,6 +63,8 @@ class SharedDBData: ObservableObject {
     
     func fetchArea() {
         let req: NSFetchRequest<Area> = Area.fetchRequest()
+        let pred = NSPredicate(format: "isArchive == false")
+        req.predicate = pred
         do {
             areas = try context.fetch(req)
         } catch {
@@ -64,8 +72,22 @@ class SharedDBData: ObservableObject {
         }
     }
     
+    func fetchArchivedArea() {
+        let req: NSFetchRequest<Area> = Area.fetchRequest()
+        let pred = NSPredicate(format: "isArchive == true")
+        req.predicate = pred
+        do {
+            archivedAreas = try context.fetch(req)
+        } catch {
+            print("Error fetching \(areas.description)", error)
+        }
+    }
+    
+    
     func fetchCategory() {
         let req: NSFetchRequest<Category> = Category.fetchRequest()
+        let pred = NSPredicate(format: "isArchive == false")
+        req.predicate = pred
         do {
             categories = try context.fetch(req)
         } catch {
@@ -73,10 +95,35 @@ class SharedDBData: ObservableObject {
         }
     }
     
+    
+    func fetchArchivedCategory() {
+        let req: NSFetchRequest<Category> = Category.fetchRequest()
+        let pred = NSPredicate(format: "isArchive == true")
+        req.predicate = pred
+        do {
+            archivedCategories = try context.fetch(req)
+        } catch {
+            print("Error fetching \(categories.description)", error)
+        }
+    }
+    
     func fetchIngredient() {
         let req: NSFetchRequest<Ingredient> = Ingredient.fetchRequest()
+        let pred = NSPredicate(format: "isArchive == false")
+        req.predicate = pred
         do {
             ingredients = try context.fetch(req)
+        } catch {
+            print("Error fetching \(ingredients.description)", error)
+        }
+    }
+    
+    func fetchArchivedIngredient() {
+        let req: NSFetchRequest<Ingredient> = Ingredient.fetchRequest()
+        let pred = NSPredicate(format: "isArchive == true")
+        req.predicate = pred
+        do {
+            archivedIngredients = try context.fetch(req)
         } catch {
             print("Error fetching \(ingredients.description)", error)
         }
