@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 
+@MainActor
 class SharedDBData: ObservableObject {
     @Published var activeMeals: [Meal] = []
     @Published var archivedMeals: [Meal] = []

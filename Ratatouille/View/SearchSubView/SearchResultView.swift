@@ -26,7 +26,7 @@ struct SearchResultView: View {
     @EnvironmentObject var db: SharedDBData
     @FetchRequest(sortDescriptors: [.init(key: "strMeal", ascending: true)]) var mealsdb: FetchedResults<Meal>
     
-    @EnvironmentObject var search: IsEmptyResult
+    @EnvironmentObject var search: SearchObject
     @Binding private var unifiedResult: UnifiedModel
     @StateObject private var DVModel = DetailViewModel()
     @State private var hashTable = Set<[TransformTest]>()
@@ -256,6 +256,7 @@ struct SearchResultView: View {
                                             Task {
                                                 try? await saveRecipeToDatabase(for: meal.idMeal)
                                                 try? saveFavoriteToDatabase(for: meal.idMeal)
+ 
                                             }
                                         } label: {
                                             Image(systemName: "star.fill")
@@ -297,7 +298,8 @@ struct SearchResultView_Previews: PreviewProvider {
     }
     static var previews: some View {
         Wrapper()
-            .environmentObject(IsEmptyResult().self)
+            .environmentObject(SharedDBData(context: PersistenceController.shared.container.viewContext))
+            .environmentObject(SearchObject().self)
             .environmentObject(AppSettings().self)
     }
 }
