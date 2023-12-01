@@ -18,6 +18,7 @@ extension Area {
 
     @NSManaged public var strArea: String?
     @NSManaged public var meals: NSSet?
+    
     public var wrappedName: String {
         strArea ?? "Unknown Area"
     }
@@ -31,7 +32,6 @@ extension Area {
             $0.wrappedName < $1.wrappedName
         }
     }
-
 }
 
 // MARK: Generated accessors for meals

@@ -19,7 +19,7 @@ extension Ingredient {
     @NSManaged public var idIngredient: String?
     @NSManaged public var strIngredient: String?
     @NSManaged public var meals: NSSet?
-
+    
     public var wrappedName: String {
         strIngredient ?? "Unknown Ingredient"
     }
