@@ -8,8 +8,22 @@
 import SwiftUI
 import Kingfisher
 
-class IsEmptyResult: ObservableObject {
+
+@MainActor class SearchObject: ObservableObject {
     @Published var isEmpty: Bool = false
+    @Published var currentInput: String = ""
+    @Published var currentResult = UnifiedModel()
+    
+    func resetResult() {
+        Task{ @MainActor in
+            currentResult = UnifiedModel()
+        }
+    }
+    func resetInput() {
+        Task{ @MainActor in
+            currentInput = ""
+        }
+    }
 }
 enum SheetItem: Int, CaseIterable {
     case ByArea = 0
@@ -43,7 +57,7 @@ enum SheetItem: Int, CaseIterable {
 }
 
 struct SearchView: View {
-    @StateObject private var isEmptyResult = IsEmptyResult()
+    @StateObject private var searchObj = SearchObject()
     @EnvironmentObject private var unifiedData: UnifiedModelData
     @EnvironmentObject private var settings: AppSettings
     @State private var query: String = ""
@@ -84,7 +98,7 @@ struct SearchView: View {
         }
     }
     private func handleDisplay(_ status: Bool) {
-        self.isEmptyResult.isEmpty = status
+        self.searchObj.isEmpty = status
     }
     
     var body: some View {
@@ -121,7 +135,7 @@ struct SearchView: View {
             
             // Pass the binding generic protocol
             SearchResultView(currentSearchResult: $unifiedResult, API)
-                .environmentObject(isEmptyResult)
+                .environmentObject(searchObj)
             
             Spacer()
         } // VStack - Container
@@ -409,7 +423,7 @@ private struct SheetView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         SearchView()
-            .environmentObject(IsEmptyResult().self)
+            .environmentObject(SearchObject().self)
             .environmentObject(UnifiedModelData().self)
             .environmentObject(AppSettings().self)
     }

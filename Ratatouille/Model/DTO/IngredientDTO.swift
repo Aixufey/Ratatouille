@@ -14,7 +14,7 @@ struct IngredientDTO: Codable, SearchResult {
 // Specific Ingredient or All Ingredients
 struct IngredientItems: Hashable, Codable, NameProvider {
     var getField: String {
-        strIngredient ?? ""
+        wrappedStrIngredient
     }
     var idIngredient: String?
     var strIngredient: String?
@@ -22,6 +22,10 @@ struct IngredientItems: Hashable, Codable, NameProvider {
     var idMeal: String?
     var strMeal: String?
     var strMealThumb: String?
+    
+    var wrappedStrIngredient: String {
+        strIngredient ?? ""
+    }
 }
 
 extension IngredientDTO {

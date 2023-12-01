@@ -8,7 +8,7 @@
 import Foundation
 
 struct AreaDTO: Codable, SearchResult {
-    var meals: [AreaItems]?
+    var meals: [AreaItems]
 }
 
 // May Decode specific Area or All Areas
