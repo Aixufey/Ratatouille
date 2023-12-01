@@ -17,7 +17,7 @@ struct SettingsRowView<T: NameProvider>: View {
         self.data = data
     }
     var body: some View {
-        HStack {
+        HStack(alignment: .center) {
             ZStack {
                 Circle()
                     .frame(width: 80)
@@ -31,7 +31,9 @@ struct SettingsRowView<T: NameProvider>: View {
                     .foregroundColor(.white)
                     .font(.system(size: 35))
             }
+
             Text(data.getField)
+                .padding(.leading)
         }
     }
 }
