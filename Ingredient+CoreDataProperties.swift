@@ -15,7 +15,9 @@ extension Ingredient {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Ingredient> {
         return NSFetchRequest<Ingredient>(entityName: "Ingredient")
     }
-
+    
+    @NSManaged public var timeStamp: Date
+    @NSManaged public var isArchive: Bool
     @NSManaged public var idIngredient: String?
     @NSManaged public var strIngredient: String?
     @NSManaged public var meals: NSSet?
@@ -30,6 +32,12 @@ extension Ingredient {
         return set.sorted {
             $0.wrappedName < $1.wrappedName
         }
+    }
+    public var wrappedTimeStamp: String {
+        let df = DateFormatter()
+        df.dateFormat = "d MMM, yyyy 'kl' hh:mm:ss a"
+        df.locale = Locale(identifier: "en_US")
+        return df.string(from: timeStamp)
     }
 }
 
