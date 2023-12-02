@@ -67,6 +67,8 @@ struct SearchResultView: View {
                     saveMeal.strCategory = meal?.strCategory
                     saveMeal.strInstructions = meal?.strInstructions
                     saveMeal.strYoutube = meal?.strYoutube
+                    saveMeal.isArchive = false
+                    saveMeal.isFavorite = false
                 }
                 try? moc.save()
                 db.fetchMeal()

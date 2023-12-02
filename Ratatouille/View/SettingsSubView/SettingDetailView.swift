@@ -41,42 +41,43 @@ struct SettingDetailView: View {
         self.title = title
     }
     
-    func saveArea(for name: String ) throws {
+    private func saveArea(for name: String ) throws {
         let newArea = Area(context: moc)
         newArea.strArea = name
+        newArea.isArchive = false
         do {
             try moc.save()
             db.fetchArea()
+            db.fetchArchivedArea()
         } catch {
             print("Error save area ",error)
         }
     }
-    func saveCategory(for name: String ) throws {
-        
+    private func saveCategory(for name: String ) throws {
         let newCat = Category(context: moc)
         newCat.strCategory = name
+        newCat.isArchive = false
         do {
             try moc.save()
-            
             db.fetchCategory()
-            
+            db.fetchArchivedArea()
         } catch {
             print("Error save area ",error)
         }
     }
-    func saveIngredient(for name: String ) throws {
-        
+    private func saveIngredient(for name: String ) throws {
         let newIng = Ingredient(context: moc)
         newIng.strIngredient = name
+        newIng.isArchive = false
         do {
             try moc.save()
-            
             db.fetchIngredient()
+            db.fetchArchivedArea()
         } catch {
             print("Error save area ",error)
         }
     }
-    func archiveIngredient(_ ingredient: Ingredient) {
+    private func archiveIngredient(_ ingredient: Ingredient) {
         ingredient.isArchive.toggle()
         ingredient.timeStamp = Date()
         do {
@@ -87,7 +88,7 @@ struct SettingDetailView: View {
             print("Error archiving ingredient ", error)
         }
     }
-    func archiveCategory(_ category: Category) {
+    private func archiveCategory(_ category: Category) {
         print("archive area \(category.wrappedName)")
         category.isArchive.toggle()
         category.timeStamp = Date()
@@ -99,7 +100,7 @@ struct SettingDetailView: View {
             print("Error archiving category ", error)
         }
     }
-    func archiveArea(_ area: Area) {
+    private func archiveArea(_ area: Area) {
         print("archive area \(area.wrappedName)")
         area.isArchive.toggle()
         area.timeStamp = Date()
@@ -132,7 +133,7 @@ struct SettingDetailView: View {
                             .swipeActions(edge: .trailing) {
                                 Button {
                                     Task { @MainActor in
-                                        print("area \(area.wrappedName)")
+                                        //print("area \(area.wrappedName)")
                                         archiveArea(area)
                                     }
                                 } label: {
@@ -153,16 +154,16 @@ struct SettingDetailView: View {
                                 } label: {
                                     Image(systemName: "square.and.pencil")
                                 }
-                                .swipeActions(edge: .trailing) {
-                                    Button {
-                                        Task { @MainActor in
-                                            print("category \(cat.wrappedName)")
-                                            archiveCategory(cat)
-                                        }
-                                    } label: {
-                                        Image(systemName: "tray.and.arrow.down.fill")
-                                    }.tint(.accentColor)
-                                }
+                            }
+                            .swipeActions(edge: .trailing) {
+                                Button {
+                                    Task { @MainActor in
+                                        //print("category \(cat.wrappedName)")
+                                        archiveCategory(cat)
+                                    }
+                                } label: {
+                                    Image(systemName: "tray.and.arrow.down.fill")
+                                }.tint(.accentColor)
                             }
                     }
                 }
@@ -178,16 +179,16 @@ struct SettingDetailView: View {
                                 } label: {
                                     Image(systemName: "square.and.pencil")
                                 }
-                                .swipeActions(edge: .trailing) {
-                                    Button {
-                                        Task { @MainActor in
-                                            print("ingredient \(ing.wrappedName)")
-                                            archiveIngredient(ing)
-                                        }
-                                    } label: {
-                                        Image(systemName: "tray.and.arrow.down.fill")
-                                    }.tint(.accentColor)
-                                }
+                            }
+                            .swipeActions(edge: .trailing) {
+                                Button {
+                                    Task { @MainActor in
+                                        //print("ingredient \(ing.wrappedName)")
+                                        archiveIngredient(ing)
+                                    }
+                                } label: {
+                                    Image(systemName: "tray.and.arrow.down.fill")
+                                }.tint(.accentColor)
                             }
                     }
                 }
@@ -201,7 +202,7 @@ struct SettingDetailView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button {
-                                Task {
+                                Task { @MainActor in
                                     try saveArea(for: area.strArea ?? "")
                                     searchObj.currentResult.area?.meals.remove(at: index)
                                 }
@@ -220,7 +221,7 @@ struct SettingDetailView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button {
-                                Task {
+                                Task { @MainActor in
                                     try saveCategory(for: category.strCategory)
                                     searchObj.currentResult.category?.categories?.remove(at: index)
                                 }
@@ -239,7 +240,7 @@ struct SettingDetailView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button {
-                                Task {
+                                Task { @MainActor in
                                     try saveIngredient(for: ing.wrappedStrIngredient)
                                     searchObj.currentResult.ingredient?.meals?.remove(at: index)
                                 }
@@ -254,13 +255,12 @@ struct SettingDetailView: View {
         }
         .imageScale(.large)
         .navigationTitle(title)
+        // TOOLBARS FOR SAVED MISC. AND ADD NEW MISC.
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        showArchive.toggle()
-                        //print(showArchive)
-                    }
+                    showArchive.toggle()
+                    //print(showArchive)
                 } label: {
                     Image(systemName: settings.isDarkMode ? "archivebox" : "archivebox.fill")
                 }
@@ -269,8 +269,7 @@ struct SettingDetailView: View {
                 Button {
                     isSheet.toggle()
                     //print(isSheet.description)
-                    showArchive.toggle()
-                    
+                    showArchive = false
                 } label: {
                     HStack {
                         Image(systemName: settings.isDarkMode ? "plus.circle" : "plus.circle.fill")
@@ -290,7 +289,7 @@ struct SettingDetailView: View {
                         TextField("Area name", text: $searchObj.currentInput)
                         Button {
                             area.strArea = searchObj.currentInput
-                            Task {
+                            Task { @MainActor in
                                 do {
                                     try moc.save()
                                     isEdit = false
@@ -312,7 +311,7 @@ struct SettingDetailView: View {
                         TextField("Category name", text: $searchObj.currentInput)
                         Button {
                             cat.strCategory = searchObj.currentInput
-                            Task {
+                            Task { @MainActor in
                                 do {
                                     try moc.save()
                                     isEdit = false
@@ -334,7 +333,7 @@ struct SettingDetailView: View {
                         TextField("Ingredient name", text: $searchObj.currentInput)
                         Button {
                             ing.strIngredient = searchObj.currentInput
-                            Task {
+                            Task { @MainActor in
                                 do {
                                     try moc.save()
                                     isEdit = false
@@ -351,8 +350,7 @@ struct SettingDetailView: View {
                         }.disabled(sanitize.isEmpty)
                     }
                 case .none:
-                    Text("")
-                    
+                    EmptyView()
                 }
             }
         }

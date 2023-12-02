@@ -11,7 +11,7 @@ struct ArchiveView: View {
     @Environment(\.managedObjectContext) var moc
     @EnvironmentObject var db: SharedDBData
     @EnvironmentObject var settings: AppSettings
-    @State private var dummies = ["Item 1", "Item 2", "Item 3"]
+    
     private func deleteMeal(_ meal: Meal) {
         moc.delete(meal)
         do {
@@ -21,6 +21,17 @@ struct ArchiveView: View {
             moc.rollback()
         }
         db.fetchArchivedMeal()
+        db.fetchMeal()
+    }
+    private func restoreMeal(_ meal: Meal) {
+        meal.isArchive.toggle()
+        do {
+            try moc.save()
+        } catch {
+            print("Error restoring ", error)
+        }
+        db.fetchArchivedMeal()
+        db.fetchMeal()
     }
     private func deleteArea(_ area: Area) {
         moc.delete(area)
@@ -31,6 +42,7 @@ struct ArchiveView: View {
             moc.rollback()
         }
         db.fetchArchivedArea()
+        db.fetchArea()
     }
     private func restoreArea(_ area: Area) {
         area.isArchive.toggle()
@@ -42,15 +54,47 @@ struct ArchiveView: View {
         db.fetchArchivedArea()
         db.fetchArea()
     }
-    private func restoreMeal(_ meal: Meal) {
-        meal.isArchive.toggle()
+    private func deleteCategory(_ category: Category) {
+        moc.delete(category)
+        do {
+            try moc.save()
+        } catch {
+            print("Error deleting ", error)
+            moc.rollback()
+        }
+        db.fetchArchivedCategory()
+        db.fetchCategory()
+    }
+    private func restoreCategory(_ category: Category) {
+        category.isArchive.toggle()
         do {
             try moc.save()
         } catch {
             print("Error restoring ", error)
         }
-        db.fetchArchivedMeal()
-        db.fetchMeal()
+        db.fetchArchivedCategory()
+        db.fetchCategory()
+    }
+    private func deleteIngredient(_ ingredient: Ingredient) {
+        moc.delete(ingredient)
+        do {
+            try moc.save()
+        } catch {
+            print("Error deleting ", error)
+            moc.rollback()
+        }
+        db.fetchArchivedIngredient()
+        db.fetchIngredient()
+    }
+    private func restoreIngredient(_ ingredient: Ingredient) {
+        ingredient.isArchive.toggle()
+        do {
+            try moc.save()
+        } catch {
+            print("Error restoring ", error)
+        }
+        db.fetchArchivedIngredient()
+        db.fetchIngredient()
     }
     var body: some View {
         List {
@@ -207,15 +251,6 @@ struct ArchiveView: View {
             }
         }// List
         .navigationTitle("Arkiv")
-    }
-    
-    private func deleteItem(at index: Int) {
-        dummies.remove(at: index)
-        print("deleted")
-    }
-    private func restoreItem(for item: String) {
-        dummies.append(item)
-        print("restore")
     }
 }
 
