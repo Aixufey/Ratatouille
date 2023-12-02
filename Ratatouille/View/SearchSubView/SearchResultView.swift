@@ -39,7 +39,7 @@ struct SearchResultView: View {
         self.API = API
     }
 
-    func saveFavoriteToDatabase(for id: String) throws {
+    private func saveFavoriteToDatabase(for id: String) throws {
         let request = Meal.fetchRequest()
         request.predicate = NSPredicate(format: "idMeal == %@", id)
         if let meal = try? moc.fetch(request), let mealToUpdate = meal.first {
@@ -48,34 +48,65 @@ struct SearchResultView: View {
             try? moc.save()
         }
     }
-    func saveRecipeToDatabase(for id: String) async throws {
+    private func saveRecipeToDatabase(for id: String) async throws {
         let request = Meal.fetchRequest()
         request.predicate = NSPredicate(format: "idMeal == %@", id)
-        let exist = try moc.fetch(request)
-        if exist.isEmpty {
-            do {
-                let saveMeal = Meal(context: moc)
+        
+        do {
+            let exist = try moc.fetch(request)
+            if exist.isEmpty {
+                // meal details from api
                 let details: MealDTO = try await API.getDetails(for: id)
-                if details.meals?.first != nil {
-                    let meal = details.meals?.first
-                    let flagURL = FlagDTO.countryCode(forArea: meal?.strArea ?? "")
-                    saveMeal.idMeal = meal?.idMeal
-                    saveMeal.strMeal = meal?.strMeal
-                    saveMeal.strMealThumb = meal?.strMealThumb
-                    saveMeal.flagURL = flagURL
-                    saveMeal.strArea = meal?.strArea
-                    saveMeal.strCategory = meal?.strCategory
-                    saveMeal.strInstructions = meal?.strInstructions
-                    saveMeal.strYoutube = meal?.strYoutube
-                    saveMeal.isArchive = false
-                    saveMeal.isFavorite = false
+                
+                if let mealDetail = details.meals?.first {
+                    // new meal record
+                    let newMeal = Meal(context: moc)
+                    let flagURL = FlagDTO.countryCode(forArea: mealDetail.strArea)
+                    newMeal.flagURL = flagURL
+                    newMeal.idMeal = mealDetail.idMeal
+                    newMeal.strMeal = mealDetail.strMeal
+                    newMeal.strMealThumb = mealDetail.strMealThumb
+                    newMeal.strArea = mealDetail.strArea
+                    newMeal.strCategory = mealDetail.strCategory
+                    newMeal.strInstructions = mealDetail.strInstructions
+                    newMeal.strYoutube = mealDetail.strYoutube
+                    newMeal.isArchive = false
+                    newMeal.isFavorite = false
+                    
+                    // The Core Data has constraint on Entities for duplication so this is possible without explicit fetching their respective ids.
+                    // for every ingredient in meal's ingredients because we sorted set into array
+                    for item in mealDetail.ingredients {
+                        // if exist ?
+                        if let ingredientName = item {
+                            // new record of ingredient
+                            let ingredient = Ingredient(context: moc)
+                            ingredient.strIngredient = ingredientName
+                            ingredient.isArchive = false
+                            // one meal associated with one ingredient
+                            // e.g. pilaf has, pepper, salt, chili
+                            // row 1 pilaf  pepper
+                            // row 2 pilaf salt
+                            // row 3 pilaf chili   etc...
+                            // the cardinality from many to many relationship broken down into 2x one-many
+                            // The inverse: pepper, salt, chili share/co-owner with same meal
+                            // One meal -> many ingredients         many ingredients must come from the same meal
+                            let mealIngredient = MealIngredient(context: moc)
+                            mealIngredient.meal = newMeal
+                            mealIngredient.ingredient = ingredient
+                        }
+                    }
                 }
-                try? moc.save()
-                db.fetchMeal()
-            } catch {
-                throw APIService.Errors.unknown(underlying: error)
             }
+            try? moc.save()
+            db.fetchMeal()
+            db.fetchArchivedArea()
+            db.fetchIngredient()
+            db.fetchArchivedIngredient()
+            db.fetchMealIngredient()
+        } catch {
+            throw APIService.Errors.unknown(underlying: error)
         }
+        
     }
     var body: some View {
         VStack {

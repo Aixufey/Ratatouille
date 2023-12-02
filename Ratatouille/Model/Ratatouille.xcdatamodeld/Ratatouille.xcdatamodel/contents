@@ -60,9 +60,16 @@
         </uniquenessConstraints>
     </entity>
     <entity name="MealIngredient" representedClassName="MealIngredient" syncable="YES">
-        <attribute name="idIngredient" optional="YES" attributeType="String"/>
+        <attribute name="idIngredient" optional="YES" attributeType="String">
+            <userInfo>
+                <entry key="key" value="value"/>
+            </userInfo>
+        </attribute>
         <attribute name="idMeal" optional="YES" attributeType="String"/>
         <relationship name="ingredient" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Ingredient" inverseName="meals" inverseEntity="Ingredient"/>
         <relationship name="meal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Meal" inverseName="ingredients" inverseEntity="Meal"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint/>
+        </uniquenessConstraints>
     </entity>
 </model>
