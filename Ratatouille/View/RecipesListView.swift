@@ -33,7 +33,7 @@ struct RecipesListView: View {
         do {
             try moc.save()
             db.fetchMeal()
-            db.fetchArchive()
+            db.fetchArchivedMeal()
         } catch {
             print("Error archiving meal ", error)
         }

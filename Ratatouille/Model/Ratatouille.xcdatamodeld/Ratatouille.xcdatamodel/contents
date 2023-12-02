@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="22G90" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Area" representedClassName="Area" syncable="YES">
+        <attribute name="isArchive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="strArea" optional="YES" attributeType="String"/>
+        <attribute name="timeStamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="meals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Meal" inverseName="area" inverseEntity="Meal"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -10,7 +12,9 @@
         </uniquenessConstraints>
     </entity>
     <entity name="Category" representedClassName="Category" syncable="YES">
+        <attribute name="isArchive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="strCategory" optional="YES" attributeType="String"/>
+        <attribute name="timeStamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="meals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Meal" inverseName="category" inverseEntity="Meal"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -20,7 +24,9 @@
     </entity>
     <entity name="Ingredient" representedClassName="Ingredient" syncable="YES">
         <attribute name="idIngredient" optional="YES" attributeType="String"/>
+        <attribute name="isArchive" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="strIngredient" optional="YES" attributeType="String"/>
+        <attribute name="timeStamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="meals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="MealIngredient" inverseName="ingredient" inverseEntity="MealIngredient"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
