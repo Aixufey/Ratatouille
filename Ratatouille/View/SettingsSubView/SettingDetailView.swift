@@ -7,24 +7,6 @@
 
 import SwiftUI
 
-enum SelectedItem {
-    case area(Area)
-    case category(Category)
-    case ingredient(Ingredient)
-    case none
-    var item: Any? {
-        switch self {
-        case .area(let area):
-            return area
-        case .category(let category):
-            return category
-        case .ingredient(let ingredient):
-            return ingredient
-        case .none:
-            return nil
-        }
-    }
-}
 struct SettingDetailView: View {
     @Environment(\.managedObjectContext) private var moc
     @EnvironmentObject private var settings: AppSettings
@@ -33,8 +15,11 @@ struct SettingDetailView: View {
     @Binding private var isSheet: Bool
     @State private var isEdit: Bool = false
     @State private var showArchive: Bool = false
-    @State private var selectedItem: SelectedItem = .none
-    
+    @State private var isArea: Area?
+    @State private var isCategory: Category?
+    @State private var isIngredient: Ingredient?
+
+
     private var title: String
     init(for isSheet: Binding<Bool>, title: String = "") {
         self._isSheet = isSheet
@@ -122,10 +107,8 @@ struct SettingDetailView: View {
                         Text(area.wrappedName)
                             .swipeActions(edge: .leading) {
                                 Button {
-                                    Task {
-                                        isEdit.toggle()
-                                        selectedItem = .area(area)
-                                    }
+                                    self.isArea = area
+                                    self.isEdit.toggle()
                                 } label: {
                                     Image(systemName: "square.and.pencil")
                                 }
@@ -147,10 +130,8 @@ struct SettingDetailView: View {
                         Text(cat.wrappedName)
                             .swipeActions(edge: .leading) {
                                 Button {
-                                    Task {
-                                        isEdit.toggle()
-                                        selectedItem = .category(cat)
-                                    }
+                                    self.isCategory = cat
+                                    self.isEdit.toggle()
                                 } label: {
                                     Image(systemName: "square.and.pencil")
                                 }
@@ -172,10 +153,8 @@ struct SettingDetailView: View {
                         Text(ing.wrappedName)
                             .swipeActions(edge: .leading) {
                                 Button {
-                                    Task {
-                                        isEdit.toggle()
-                                        selectedItem = .ingredient(ing)
-                                    }
+                                    self.isIngredient = ing
+                                    self.isEdit.toggle()
                                 } label: {
                                     Image(systemName: "square.and.pencil")
                                 }
@@ -279,84 +258,115 @@ struct SettingDetailView: View {
             }
         }// toolbar
         .sheet(isPresented: $isEdit) {
-            let sanitize = searchObj.currentInput.trimmingCharacters(in: .whitespacesAndNewlines)
-                .replacingOccurrences(of: " ", with: "")
-            Group {
-                switch selectedItem {
-                case .area(let area):
-                    Form {
-                        Text("Original name: \(area.wrappedName)")
-                        TextField("Area name", text: $searchObj.currentInput)
-                        Button {
-                            area.strArea = searchObj.currentInput
-                            Task { @MainActor in
-                                do {
-                                    try moc.save()
-                                    isEdit = false
-                                    searchObj.resetInput()
-                                } catch {
-                                    print("Error saving: \(error.localizedDescription)")
-                                }
+            SheetDetailView(isArea: $isArea, isCategory: $isCategory, isIngredient: $isIngredient, isEdit: $isEdit)
+                .presentationDetents([.fraction(0.33)])
+        }
+        
+    }
+}
+
+/**
+ Workaround with state showing
+ Somehow sate are not persisted before sheet is "created" so one way to solve it is to bind it via View...
+ Pretty funny you don't need to clean up
+ */
+struct SheetDetailView: View {
+    @Environment(\.managedObjectContext) private var moc
+    @EnvironmentObject private var searchObj: SearchObject
+    @EnvironmentObject private var db: SharedDBData
+    @Binding var isArea: Area?
+    @Binding var isCategory: Category?
+    @Binding var isIngredient: Ingredient?
+    @Binding var isEdit: Bool
+    
+    var body: some View {
+        let sanitize = searchObj.currentInput.trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: " ", with: "")
+        
+        VStack {
+            HStack {
+                Button {
+                    isEdit.toggle()
+                } label: {
+                    Text("Avbryt")
+                }
+                Spacer()
+                Image(systemName: "square.and.pencil")
+            }.padding()
+            if let area = isArea {
+                Form {
+                    Text("Original name: \(area.wrappedName)")
+                    TextField("Area name", text: $searchObj.currentInput)
+                    Button {
+                        area.strArea = searchObj.currentInput
+                        Task {
+                            do {
+                                try moc.save()
+                                isEdit = false
+                                searchObj.resetInput()
+                            } catch {
+                                print("Error saving: \(error.localizedDescription)")
                             }
-                        } label: {
-                            HStack {
-                                Text("Save")
-                                Image(systemName: "paperplane.circle")
+                        }
+                    } label: {
+                        HStack {
+                            Text("Save")
+                            Image(systemName: "paperplane.circle")
+                        }
+                    }.disabled(sanitize.isEmpty)
+                }
+            }
+            
+            if let cat = isCategory {
+                Form {
+                    Text("Original name: \(cat.wrappedName)")
+                    TextField("Category name", text: $searchObj.currentInput)
+                    Button {
+                        cat.strCategory = searchObj.currentInput
+                        Task {
+                            do {
+                                try moc.save()
+                                isEdit = false
+                                searchObj.resetInput()
+                            } catch {
+                                print("Error saving: \(error.localizedDescription)")
                             }
-                        }.disabled(sanitize.isEmpty)
-                    }
-                case .category(let cat):
-                    Form {
-                        Text("Original name: \(cat.wrappedName)")
-                        TextField("Category name", text: $searchObj.currentInput)
-                        Button {
-                            cat.strCategory = searchObj.currentInput
-                            Task { @MainActor in
-                                do {
-                                    try moc.save()
-                                    isEdit = false
-                                    searchObj.resetInput()
-                                } catch {
-                                    print("Error saving: \(error.localizedDescription)")
-                                }
+                        }
+                    } label: {
+                        HStack {
+                            Text("Save")
+                            Image(systemName: "paperplane.circle")
+                        }
+                    }.disabled(sanitize.isEmpty)
+                }
+            }
+            
+            if let ing = isIngredient {
+                Form {
+                    Text("Original name: \(ing.wrappedName)")
+                    TextField("Ingredient name", text: $searchObj.currentInput)
+                    Button {
+                        ing.strIngredient = searchObj.currentInput
+                        Task {
+                            do {
+                                try moc.save()
+                                isEdit = false
+                                searchObj.resetInput()
+                            } catch {
+                                print("Error saving: \(error.localizedDescription)")
                             }
-                        } label: {
-                            HStack {
-                                Text("Save")
-                                Image(systemName: "paperplane.circle")
-                            }
-                        }.disabled(sanitize.isEmpty)
-                    }
-                case .ingredient(let ing):
-                    Form {
-                        Text("Original name: \(ing.wrappedName)")
-                        TextField("Ingredient name", text: $searchObj.currentInput)
-                        Button {
-                            ing.strIngredient = searchObj.currentInput
-                            Task { @MainActor in
-                                do {
-                                    try moc.save()
-                                    isEdit = false
-                                    searchObj.resetInput()
-                                } catch {
-                                    print("Error saving: \(error.localizedDescription)")
-                                }
-                            }
-                        } label: {
-                            HStack {
-                                Text("Save")
-                                Image(systemName: "paperplane.circle")
-                            }
-                        }.disabled(sanitize.isEmpty)
-                    }
-                case .none:
-                    EmptyView()
+                        }
+                    } label: {
+                        HStack {
+                            Text("Save")
+                            Image(systemName: "paperplane.circle")
+                        }
+                    }.disabled(sanitize.isEmpty)
                 }
             }
         }
     }
 }
-
 struct LandAreasView_Previews: PreviewProvider {
     static var previews: some View {
         SettingDetailView(for: Binding.constant(false))
