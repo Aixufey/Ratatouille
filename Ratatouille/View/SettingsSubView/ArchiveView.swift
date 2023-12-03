@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ArchiveView: View {
-    @Environment(\.managedObjectContext) var moc
-    @EnvironmentObject var db: SharedDBData
-    @EnvironmentObject var settings: AppSettings
-    @State private var dummies = ["Item 1", "Item 2", "Item 3"]
+    @Environment(\.managedObjectContext) private var moc
+    @EnvironmentObject private var db: SharedDBData
+    @EnvironmentObject private var settings: AppSettings
+    @State private var isSheet: Bool = false
+    @State var selectedMeal: Meal?
+    
     private func deleteMeal(_ meal: Meal) {
         moc.delete(meal)
         do {
@@ -21,26 +24,7 @@ struct ArchiveView: View {
             moc.rollback()
         }
         db.fetchArchivedMeal()
-    }
-    private func deleteArea(_ area: Area) {
-        moc.delete(area)
-        do {
-            try moc.save()
-        } catch {
-            print("Error deleting ", error)
-            moc.rollback()
-        }
-        db.fetchArchivedArea()
-    }
-    private func restoreArea(_ area: Area) {
-        area.isArchive.toggle()
-        do {
-            try moc.save()
-        } catch {
-            print("Error restoring ", error)
-        }
-        db.fetchArchivedArea()
-        db.fetchArea()
+        db.fetchMeal()
     }
     private func restoreMeal(_ meal: Meal) {
         meal.isArchive.toggle()
@@ -52,6 +36,69 @@ struct ArchiveView: View {
         db.fetchArchivedMeal()
         db.fetchMeal()
     }
+    private func deleteArea(_ area: Area) {
+        moc.delete(area)
+        do {
+            try moc.save()
+        } catch {
+            print("Error deleting ", error)
+            moc.rollback()
+        }
+        db.fetchArchivedArea()
+        db.fetchArea()
+    }
+    private func restoreArea(_ area: Area) {
+        area.isArchive.toggle()
+        do {
+            try moc.save()
+        } catch {
+            print("Error restoring ", error)
+        }
+        db.fetchArchivedArea()
+        db.fetchArea()
+    }
+    private func deleteCategory(_ category: Category) {
+        moc.delete(category)
+        do {
+            try moc.save()
+        } catch {
+            print("Error deleting ", error)
+            moc.rollback()
+        }
+        db.fetchArchivedCategory()
+        db.fetchCategory()
+    }
+    private func restoreCategory(_ category: Category) {
+        category.isArchive.toggle()
+        do {
+            try moc.save()
+        } catch {
+            print("Error restoring ", error)
+        }
+        db.fetchArchivedCategory()
+        db.fetchCategory()
+    }
+    private func deleteIngredient(_ ingredient: Ingredient) {
+        moc.delete(ingredient)
+        do {
+            try moc.save()
+        } catch {
+            print("Error deleting ", error)
+            moc.rollback()
+        }
+        db.fetchArchivedIngredient()
+        db.fetchIngredient()
+    }
+    private func restoreIngredient(_ ingredient: Ingredient) {
+        ingredient.isArchive.toggle()
+        do {
+            try moc.save()
+        } catch {
+            print("Error restoring ", error)
+        }
+        db.fetchArchivedIngredient()
+        db.fetchIngredient()
+    }
     var body: some View {
         List {
             Section(header: Text("Landområder")) {
@@ -62,27 +109,23 @@ struct ArchiveView: View {
                         Text("Ingen arkiverte landområder")
                     }.foregroundColor(.blue)
                 } else {
-                    ForEach(db.archivedAreas, id: \.id) { area in
+                    ForEach(db.archivedAreas, id: \.idArea) { area in
                         VStack(alignment: .leading) {
                             Text(area.wrappedName)
                             Text("Arkivert: \(area.wrappedTimeStamp)")
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
-                                withAnimation(.easeInOut(duration: 0.33)) {
-                                    DispatchQueue.main.async {
-                                        deleteArea(area)
-                                    }
+                                Task { @MainActor in
+                                    deleteArea(area)
                                 }
                             } label: {
                                 Image(systemName: "trash")
                             }.tint(.red)
                             
                             Button {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    DispatchQueue.main.async {
-                                        restoreArea(area)
-                                    }
+                                Task { @MainActor in
+                                    restoreArea(area)
                                 }
                             } label: {
                                 Image(systemName: "tray.and.arrow.up")
@@ -100,27 +143,23 @@ struct ArchiveView: View {
                         Text("Ingen arkiverte kategorier")
                     }.foregroundColor(.blue)
                 } else {
-                    ForEach(db.archivedCategories, id: \.id) { cat in
+                    ForEach(db.archivedCategories, id: \.idCategory) { cat in
                         VStack(alignment: .leading) {
                             Text(cat.wrappedName)
                             Text("Arkivert: \(cat.wrappedTimeStamp)")
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
-                                withAnimation(.easeInOut(duration: 0.33)) {
-                                    DispatchQueue.main.async {
-                                        
-                                    }
+                                Task { @MainActor in
+                                    deleteCategory(cat)
                                 }
                             } label: {
                                 Image(systemName: "trash")
                             }.tint(.red)
                             
                             Button {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    DispatchQueue.main.async {
-                                        
-                                    }
+                                Task { @MainActor in
+                                    restoreCategory(cat)
                                 }
                             } label: {
                                 Image(systemName: "tray.and.arrow.up")
@@ -145,20 +184,16 @@ struct ArchiveView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
-                                withAnimation(.easeInOut(duration: 0.33)) {
-                                    DispatchQueue.main.async {
-                                        
-                                    }
+                                Task { @MainActor in
+                                    deleteIngredient(ing)
                                 }
                             } label: {
                                 Image(systemName: "trash")
                             }.tint(.red)
                             
                             Button {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    DispatchQueue.main.async {
-                                        
-                                    }
+                                Task { @MainActor in
+                                    restoreIngredient(ing)
                                 }
                             } label: {
                                 Image(systemName: "tray.and.arrow.up")
@@ -180,6 +215,14 @@ struct ArchiveView: View {
                         VStack(alignment: .leading) {
                             Text(meal.wrappedName)
                             Text("Arkivert: \(meal.wrappedtimeStamp)")
+                        }
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            Button {
+                                isSheet.toggle()
+                                self.selectedMeal = meal
+                            } label: {
+                                Image(systemName: "square.and.pencil")
+                            }
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
@@ -207,15 +250,135 @@ struct ArchiveView: View {
             }
         }// List
         .navigationTitle("Arkiv")
+        .sheet(isPresented: $isSheet) {
+            ArchiveSheetView(current: $selectedMeal, isSheet: $isSheet)
+                .presentationDetents([.fraction(0.7)])
+        }
+    }
+}
+
+struct ArchiveSheetView: View {
+    @Environment(\.managedObjectContext) private var moc
+    @EnvironmentObject private var db: SharedDBData
+    @EnvironmentObject private var searchObj: SearchObject
+    @Binding var current: Meal?
+    @Binding var isSheet: Bool
+    @State private var isEditName: Bool = false
+    @State private var isEditCategory: Bool = false
+    @State private var isEditArea: Bool = false
+    @State private var newName: String = ""
+    @State private var newCategory: String = ""
+    @State private var newArea: String = ""
+    private let maxLength: Int = 25
+
+    private var isSaveEnabled: Bool {
+        !newName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+        !newCategory.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+        !newArea.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
     
-    private func deleteItem(at index: Int) {
-        dummies.remove(at: index)
-        print("deleted")
+    private func truncateTxt(for text: String) -> String {
+        if text.count > maxLength {
+            let i = text.index(text.startIndex, offsetBy: maxLength)
+            return String(text[..<i]).appending("...")
+        } else {
+            return text
+        }
     }
-    private func restoreItem(for item: String) {
-        dummies.append(item)
-        print("restore")
+
+    var body: some View {
+        if let meal = current {
+            VStack {
+                HStack {
+                    Spacer()
+                    Text("Redigere \(truncateTxt(for: meal.wrappedName))")
+                        .offset(x: 20)
+                    Spacer()
+                    Button {
+                        isSheet.toggle()
+                    } label: {
+                        Text("Avbryt")
+                    }
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
+                
+                KFImage(URL(string: meal.wrappedThumb))
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(Circle())
+                    .frame(width: 150, height: 150)
+                    .overlay(Circle().stroke(Color(.systemPurple), lineWidth: 4))
+                    .padding()
+                    .padding(.top)
+                
+                
+                Form {
+                    HStack {
+                        if isEditName {
+                            TextField("New name..", text: $newName)
+                        } else {
+                            Text("Original name: \(meal.wrappedName)")
+                        }
+                        Spacer()
+                        EditButton(isEditing: $isEditName)
+                    }
+                    HStack {
+                        if isEditCategory {
+                            TextField("New category..", text: $newCategory)
+                        } else {
+                            Text("Original category: \(meal.wrappedCategory)")
+                        }
+                        Spacer()
+                        EditButton(isEditing: $isEditCategory)
+                    }
+                    HStack {
+                        if isEditArea {
+                            TextField("New area..", text: $newArea)
+                        } else {
+                            Text("Original area: \(meal.wrappedArea)")
+                        }
+                        Spacer()
+                        EditButton(isEditing: $isEditArea)
+                    }
+                    SaveButton(meal: meal)
+                        .disabled(!isSaveEnabled)
+                }
+            }
+        }
+    }
+
+    private func EditButton(isEditing: Binding<Bool>) -> some View {
+        Image(systemName: "rectangle.and.pencil.and.ellipsis.rtl")
+            .onTapGesture {
+                isEditing.wrappedValue.toggle()
+            }
+            .foregroundColor(Color.blue)
+    }
+
+    private func SaveButton(meal: Meal) -> some View {
+        Button {
+            meal.strMeal = searchObj.currentInput
+            Task {
+                do {
+                    try moc.save()
+                    db.fetchArchivedMeal()
+                    isSheet = false
+                    searchObj.resetInput()
+                } catch {
+                    print("Error saving: \(error.localizedDescription)")
+                }
+            }
+        } label: {
+            HStack(alignment: .center) {
+                Text("Save")
+                Image(systemName: "paperplane.circle")
+            }
+            .padding()
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+        }
     }
 }
 

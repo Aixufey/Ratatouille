@@ -62,9 +62,13 @@ extension Meal {
 
 
     public var ingredientsArray: [Ingredient] {
-        let set = ingredients as? Set<Ingredient> ?? []
-        
-        return set.sorted {
+        // Swift aggregated all ingredients linked to a meal as Set.
+        let set = ingredients as? Set<MealIngredient> ?? []
+        // return as array by mapping through Set, for each ingredient object compare their lexical name value and filter out nil values.
+        // Deletion rule set to nullify as per request to not delete cascade.
+        return set.compactMap {
+            $0.ingredient
+        }.sorted {
             $0.wrappedName < $1.wrappedName
         }
     }

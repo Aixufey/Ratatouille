@@ -16,10 +16,16 @@ extension Area {
         return NSFetchRequest<Area>(entityName: "Area")
     }
 
+    @NSManaged public var idArea: String?
     @NSManaged public var timeStamp: Date
     @NSManaged public var strArea: String?
     @NSManaged public var isArchive: Bool
     @NSManaged public var meals: NSSet?
+    
+    override public func awakeFromInsert() {
+        super.awakeFromInsert()
+        self.idArea = UUID().uuidString
+    }
     
     public var wrappedName: String {
         strArea ?? "Unknown Area"
