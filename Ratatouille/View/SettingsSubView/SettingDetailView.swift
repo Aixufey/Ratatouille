@@ -321,6 +321,8 @@ struct SheetDetailView: View {
                         Task {
                             do {
                                 try moc.save()
+                                db.fetchArea()
+                                db.fetchArchivedArea()
                                 isEdit = false
                                 searchObj.resetInput()
                             } catch {
@@ -345,6 +347,8 @@ struct SheetDetailView: View {
                         Task {
                             do {
                                 try moc.save()
+                                db.fetchCategory()
+                                db.fetchArchivedCategory()
                                 isEdit = false
                                 searchObj.resetInput()
                             } catch {
@@ -369,6 +373,8 @@ struct SheetDetailView: View {
                         Task {
                             do {
                                 try moc.save()
+                                db.fetchIngredient()
+                                db.fetchArchivedIngredient()
                                 isEdit = false
                                 searchObj.resetInput()
                             } catch {

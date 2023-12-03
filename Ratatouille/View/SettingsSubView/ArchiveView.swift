@@ -140,7 +140,7 @@ struct ArchiveView: View {
                         Text("Ingen arkiverte kategorier")
                     }.foregroundColor(.blue)
                 } else {
-                    ForEach(db.archivedCategories, id: \.id) { cat in
+                    ForEach(db.archivedCategories, id: \.idCategory) { cat in
                         VStack(alignment: .leading) {
                             Text(cat.wrappedName)
                             Text("Arkivert: \(cat.wrappedTimeStamp)")
@@ -174,7 +174,7 @@ struct ArchiveView: View {
                         Text("Ingen arkiverte ingredienser")
                     }.foregroundColor(.blue)
                 } else {
-                    ForEach(db.archivedIngredients, id: \.self) { ing in
+                    ForEach(db.archivedIngredients, id: \.idIngredient) { ing in
                         VStack(alignment: .leading) {
                             Text(ing.wrappedName)
                             Text("Arkivert: \(ing.wrappedTimeStamp)")
