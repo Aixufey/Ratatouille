@@ -11,7 +11,7 @@ struct ArchiveView: View {
     @Environment(\.managedObjectContext) var moc
     @EnvironmentObject var db: SharedDBData
     @EnvironmentObject var settings: AppSettings
-    @State private var dummies = ["Item 1", "Item 2", "Item 3"]
+    
     private func deleteMeal(_ meal: Meal) {
         moc.delete(meal)
         do {
@@ -21,26 +21,7 @@ struct ArchiveView: View {
             moc.rollback()
         }
         db.fetchArchivedMeal()
-    }
-    private func deleteArea(_ area: Area) {
-        moc.delete(area)
-        do {
-            try moc.save()
-        } catch {
-            print("Error deleting ", error)
-            moc.rollback()
-        }
-        db.fetchArchivedArea()
-    }
-    private func restoreArea(_ area: Area) {
-        area.isArchive.toggle()
-        do {
-            try moc.save()
-        } catch {
-            print("Error restoring ", error)
-        }
-        db.fetchArchivedArea()
-        db.fetchArea()
+        db.fetchMeal()
     }
     private func restoreMeal(_ meal: Meal) {
         meal.isArchive.toggle()
@@ -52,6 +33,69 @@ struct ArchiveView: View {
         db.fetchArchivedMeal()
         db.fetchMeal()
     }
+    private func deleteArea(_ area: Area) {
+        moc.delete(area)
+        do {
+            try moc.save()
+        } catch {
+            print("Error deleting ", error)
+            moc.rollback()
+        }
+        db.fetchArchivedArea()
+        db.fetchArea()
+    }
+    private func restoreArea(_ area: Area) {
+        area.isArchive.toggle()
+        do {
+            try moc.save()
+        } catch {
+            print("Error restoring ", error)
+        }
+        db.fetchArchivedArea()
+        db.fetchArea()
+    }
+    private func deleteCategory(_ category: Category) {
+        moc.delete(category)
+        do {
+            try moc.save()
+        } catch {
+            print("Error deleting ", error)
+            moc.rollback()
+        }
+        db.fetchArchivedCategory()
+        db.fetchCategory()
+    }
+    private func restoreCategory(_ category: Category) {
+        category.isArchive.toggle()
+        do {
+            try moc.save()
+        } catch {
+            print("Error restoring ", error)
+        }
+        db.fetchArchivedCategory()
+        db.fetchCategory()
+    }
+    private func deleteIngredient(_ ingredient: Ingredient) {
+        moc.delete(ingredient)
+        do {
+            try moc.save()
+        } catch {
+            print("Error deleting ", error)
+            moc.rollback()
+        }
+        db.fetchArchivedIngredient()
+        db.fetchIngredient()
+    }
+    private func restoreIngredient(_ ingredient: Ingredient) {
+        ingredient.isArchive.toggle()
+        do {
+            try moc.save()
+        } catch {
+            print("Error restoring ", error)
+        }
+        db.fetchArchivedIngredient()
+        db.fetchIngredient()
+    }
     var body: some View {
         List {
             Section(header: Text("Landområder")) {
@@ -62,27 +106,23 @@ struct ArchiveView: View {
                         Text("Ingen arkiverte landområder")
                     }.foregroundColor(.blue)
                 } else {
-                    ForEach(db.archivedAreas, id: \.id) { area in
+                    ForEach(db.archivedAreas, id: \.idArea) { area in
                         VStack(alignment: .leading) {
                             Text(area.wrappedName)
                             Text("Arkivert: \(area.wrappedTimeStamp)")
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
-                                withAnimation(.easeInOut(duration: 0.33)) {
-                                    DispatchQueue.main.async {
-                                        deleteArea(area)
-                                    }
+                                Task { @MainActor in
+                                    deleteArea(area)
                                 }
                             } label: {
                                 Image(systemName: "trash")
                             }.tint(.red)
                             
                             Button {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    DispatchQueue.main.async {
-                                        restoreArea(area)
-                                    }
+                                Task { @MainActor in
+                                    restoreArea(area)
                                 }
                             } label: {
                                 Image(systemName: "tray.and.arrow.up")
@@ -100,27 +140,23 @@ struct ArchiveView: View {
                         Text("Ingen arkiverte kategorier")
                     }.foregroundColor(.blue)
                 } else {
-                    ForEach(db.archivedCategories, id: \.id) { cat in
+                    ForEach(db.archivedCategories, id: \.idCategory) { cat in
                         VStack(alignment: .leading) {
                             Text(cat.wrappedName)
                             Text("Arkivert: \(cat.wrappedTimeStamp)")
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
-                                withAnimation(.easeInOut(duration: 0.33)) {
-                                    DispatchQueue.main.async {
-                                        
-                                    }
+                                Task { @MainActor in
+                                    deleteCategory(cat)
                                 }
                             } label: {
                                 Image(systemName: "trash")
                             }.tint(.red)
                             
                             Button {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    DispatchQueue.main.async {
-                                        
-                                    }
+                                Task { @MainActor in
+                                    restoreCategory(cat)
                                 }
                             } label: {
                                 Image(systemName: "tray.and.arrow.up")
@@ -145,20 +181,16 @@ struct ArchiveView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
-                                withAnimation(.easeInOut(duration: 0.33)) {
-                                    DispatchQueue.main.async {
-                                        
-                                    }
+                                Task { @MainActor in
+                                    deleteIngredient(ing)
                                 }
                             } label: {
                                 Image(systemName: "trash")
                             }.tint(.red)
                             
                             Button {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    DispatchQueue.main.async {
-                                        
-                                    }
+                                Task { @MainActor in
+                                    restoreIngredient(ing)
                                 }
                             } label: {
                                 Image(systemName: "tray.and.arrow.up")
@@ -207,15 +239,6 @@ struct ArchiveView: View {
             }
         }// List
         .navigationTitle("Arkiv")
-    }
-    
-    private func deleteItem(at index: Int) {
-        dummies.remove(at: index)
-        print("deleted")
-    }
-    private func restoreItem(for item: String) {
-        dummies.append(item)
-        print("restore")
     }
 }
 

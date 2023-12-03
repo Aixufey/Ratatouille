@@ -16,11 +16,17 @@ extension Ingredient {
         return NSFetchRequest<Ingredient>(entityName: "Ingredient")
     }
     
+    
     @NSManaged public var timeStamp: Date
     @NSManaged public var isArchive: Bool
     @NSManaged public var idIngredient: String?
     @NSManaged public var strIngredient: String?
     @NSManaged public var meals: NSSet?
+    
+    override public func awakeFromInsert() {
+        super.awakeFromInsert()
+        self.idIngredient = UUID().uuidString
+    }
     
     public var wrappedName: String {
         strIngredient ?? "Unknown Ingredient"
