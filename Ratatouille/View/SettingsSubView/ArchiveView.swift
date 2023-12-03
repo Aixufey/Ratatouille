@@ -106,27 +106,23 @@ struct ArchiveView: View {
                         Text("Ingen arkiverte landområder")
                     }.foregroundColor(.blue)
                 } else {
-                    ForEach(db.archivedAreas, id: \.id) { area in
+                    ForEach(db.archivedAreas, id: \.idArea) { area in
                         VStack(alignment: .leading) {
                             Text(area.wrappedName)
                             Text("Arkivert: \(area.wrappedTimeStamp)")
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
-                                withAnimation(.easeInOut(duration: 0.33)) {
-                                    DispatchQueue.main.async {
-                                        deleteArea(area)
-                                    }
+                                Task { @MainActor in
+                                    deleteArea(area)
                                 }
                             } label: {
                                 Image(systemName: "trash")
                             }.tint(.red)
                             
                             Button {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    DispatchQueue.main.async {
-                                        restoreArea(area)
-                                    }
+                                Task { @MainActor in
+                                    restoreArea(area)
                                 }
                             } label: {
                                 Image(systemName: "tray.and.arrow.up")
@@ -151,20 +147,16 @@ struct ArchiveView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
-                                withAnimation(.easeInOut(duration: 0.33)) {
-                                    DispatchQueue.main.async {
-                                        
-                                    }
+                                Task { @MainActor in
+                                    deleteCategory(cat)
                                 }
                             } label: {
                                 Image(systemName: "trash")
                             }.tint(.red)
                             
                             Button {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    DispatchQueue.main.async {
-                                        
-                                    }
+                                Task { @MainActor in
+                                    restoreCategory(cat)
                                 }
                             } label: {
                                 Image(systemName: "tray.and.arrow.up")
@@ -182,27 +174,23 @@ struct ArchiveView: View {
                         Text("Ingen arkiverte ingredienser")
                     }.foregroundColor(.blue)
                 } else {
-                    ForEach(db.archivedIngredients, id: \.idIngredient) { ing in
+                    ForEach(db.archivedIngredients, id: \.self) { ing in
                         VStack(alignment: .leading) {
                             Text(ing.wrappedName)
                             Text("Arkivert: \(ing.wrappedTimeStamp)")
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
-                                withAnimation(.easeInOut(duration: 0.33)) {
-                                    DispatchQueue.main.async {
-                                        
-                                    }
+                                Task { @MainActor in
+                                    deleteIngredient(ing)
                                 }
                             } label: {
                                 Image(systemName: "trash")
                             }.tint(.red)
                             
                             Button {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    DispatchQueue.main.async {
-                                        
-                                    }
+                                Task { @MainActor in
+                                    restoreIngredient(ing)
                                 }
                             } label: {
                                 Image(systemName: "tray.and.arrow.up")

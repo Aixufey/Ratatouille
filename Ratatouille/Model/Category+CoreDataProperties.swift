@@ -15,11 +15,17 @@ extension Category {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Category> {
         return NSFetchRequest<Category>(entityName: "Category")
     }
-
+    
+    @NSManaged public var idCategory: String?
     @NSManaged public var timeStamp: Date
     @NSManaged public var isArchive: Bool
     @NSManaged public var strCategory: String?
     @NSManaged public var meals: NSSet?
+    
+    override public func awakeFromInsert() {
+        super.awakeFromInsert()
+        self.idCategory = UUID().uuidString
+    }
     
     public var wrappedName: String {
         strCategory ?? "Unknown Category"

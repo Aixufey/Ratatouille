@@ -18,8 +18,8 @@ struct SettingDetailView: View {
     @State private var isArea: Area?
     @State private var isCategory: Category?
     @State private var isIngredient: Ingredient?
-
-
+    
+    
     private var title: String
     init(for isSheet: Binding<Bool>, title: String = "") {
         self._isSheet = isSheet
@@ -86,15 +86,17 @@ struct SettingDetailView: View {
         }
     }
     private func archiveArea(_ area: Area) {
-        print("archive area \(area.wrappedName)")
-        area.isArchive.toggle()
-        area.timeStamp = Date()
-        do {
-            try moc.save()
-            db.fetchArea()
-            db.fetchArchivedArea()
-        } catch {
-            print("Error archiving area ", error)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            print("archive area \(area.wrappedName)")
+            area.isArchive.toggle()
+            area.timeStamp = Date()
+            do {
+                try moc.save()
+                db.fetchArea()
+                db.fetchArchivedArea()
+            } catch {
+                print("Error archiving area ", error)
+            }
         }
     }
     var body: some View {
@@ -102,77 +104,94 @@ struct SettingDetailView: View {
             //  Show saved db or show searches
             if showArchive {
                 // Show DATABASE
-                if title == "Landområder", !db.areas.isEmpty {
-                    ForEach(db.areas, id: \.self) { area in
-                        Text(area.wrappedName)
-                            .swipeActions(edge: .leading) {
-                                Button {
-                                    self.isArea = area
-                                    self.isEdit.toggle()
-                                } label: {
-                                    Image(systemName: "square.and.pencil")
-                                }
-                            }
-                            .swipeActions(edge: .trailing) {
-                                Button {
-                                    Task { @MainActor in
-                                        //print("area \(area.wrappedName)")
-                                        archiveArea(area)
+                if title == "Landområder" {
+                    if db.areas.isEmpty {
+                        Text("Ingen lagret landområder")
+                            .padding()
+                    } else {
+                        ForEach(db.areas, id: \.idArea) { area in
+                            Text(area.wrappedName)
+                                .swipeActions(edge: .leading) {
+                                    Button {
+                                        self.isArea = area
+                                        self.isEdit.toggle()
+                                    } label: {
+                                        Image(systemName: "square.and.pencil")
                                     }
-                                } label: {
-                                    Image(systemName: "tray.and.arrow.down.fill")
-                                }.tint(.accentColor)
-                            }
+                                }
+                                .swipeActions(edge: .trailing) {
+                                    Button {
+                                        Task { @MainActor in
+                                            //print("area \(area.wrappedName)")
+                                            archiveArea(area)
+                                        }
+                                    } label: {
+                                        Image(systemName: "tray.and.arrow.down.fill")
+                                    }.tint(.accentColor)
+                                }
+                        }
                     }
                 }
-                if title == "Kategorier", !db.categories.isEmpty {
-                    ForEach(db.categories, id: \.self) { cat in
-                        Text(cat.wrappedName)
-                            .swipeActions(edge: .leading) {
-                                Button {
-                                    self.isCategory = cat
-                                    self.isEdit.toggle()
-                                } label: {
-                                    Image(systemName: "square.and.pencil")
-                                }
-                            }
-                            .swipeActions(edge: .trailing) {
-                                Button {
-                                    Task { @MainActor in
-                                        //print("category \(cat.wrappedName)")
-                                        archiveCategory(cat)
+                if title == "Kategorier" {
+                    if db.categories.isEmpty {
+                        Text("Ingen lagret kategorier")
+                            .padding()
+                    } else {
+                        ForEach(db.categories, id: \.idCategory) { cat in
+                            Text(cat.wrappedName)
+                                .swipeActions(edge: .leading) {
+                                    Button {
+                                        self.isCategory = cat
+                                        self.isEdit.toggle()
+                                    } label: {
+                                        Image(systemName: "square.and.pencil")
                                     }
-                                } label: {
-                                    Image(systemName: "tray.and.arrow.down.fill")
-                                }.tint(.accentColor)
-                            }
+                                }
+                                .swipeActions(edge: .trailing) {
+                                    Button {
+                                        Task { @MainActor in
+                                            //print("category \(cat.wrappedName)")
+                                            archiveCategory(cat)
+                                        }
+                                    } label: {
+                                        Image(systemName: "tray.and.arrow.down.fill")
+                                    }.tint(.accentColor)
+                                }
+                        }
                     }
                 }
-                if title == "Ingredienser", !db.ingredients.isEmpty {
-                    ForEach(db.ingredients, id: \.self) { ing in
-                        Text(ing.wrappedName)
-                            .swipeActions(edge: .leading) {
-                                Button {
-                                    self.isIngredient = ing
-                                    self.isEdit.toggle()
-                                } label: {
-                                    Image(systemName: "square.and.pencil")
-                                }
-                            }
-                            .swipeActions(edge: .trailing) {
-                                Button {
-                                    Task { @MainActor in
-                                        //print("ingredient \(ing.wrappedName)")
-                                        archiveIngredient(ing)
+                if title == "Ingredienser" {
+                    if db.ingredients.isEmpty {
+                        Text("Ingen lagret ingredienser")
+                            .padding()
+                    } else {
+                        ForEach(db.ingredients, id: \.idIngredient) { ing in
+                            Text(ing.wrappedName)
+                                .swipeActions(edge: .leading) {
+                                    Button {
+                                        self.isIngredient = ing
+                                        self.isEdit.toggle()
+                                    } label: {
+                                        Image(systemName: "square.and.pencil")
                                     }
-                                } label: {
-                                    Image(systemName: "tray.and.arrow.down.fill")
-                                }.tint(.accentColor)
-                            }
+                                }
+                                .swipeActions(edge: .trailing) {
+                                    Button {
+                                        Task { @MainActor in
+                                            //print("ingredient \(ing.wrappedName)")
+                                            archiveIngredient(ing)
+                                        }
+                                    } label: {
+                                        Image(systemName: "tray.and.arrow.down.fill")
+                                    }.tint(.accentColor)
+                                }
+                        }
                     }
+                    
                 }
-            } else { // Else show searches from API
                 
+            } else {
+                // Else show searches from API
                 if let areas: AreaDTO = searchObj.currentResult.area {
                     ForEach(areas.meals.indices, id: \.self) { index in
                         let area = areas.meals[index]
