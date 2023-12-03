@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ArchiveView: View {
-    @Environment(\.managedObjectContext) var moc
-    @EnvironmentObject var db: SharedDBData
-    @EnvironmentObject var settings: AppSettings
+    @Environment(\.managedObjectContext) private var moc
+    @EnvironmentObject private var db: SharedDBData
+    @EnvironmentObject private var settings: AppSettings
+    @State private var isSheet: Bool = false
+    @State var selectedMeal: Meal?
     
     private func deleteMeal(_ meal: Meal) {
         moc.delete(meal)
@@ -213,6 +216,14 @@ struct ArchiveView: View {
                             Text(meal.wrappedName)
                             Text("Arkivert: \(meal.wrappedtimeStamp)")
                         }
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            Button {
+                                isSheet.toggle()
+                                self.selectedMeal = meal
+                            } label: {
+                                Image(systemName: "square.and.pencil")
+                            }
+                        }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
                                 withAnimation(.easeInOut(duration: 0.33)) {
@@ -239,6 +250,135 @@ struct ArchiveView: View {
             }
         }// List
         .navigationTitle("Arkiv")
+        .sheet(isPresented: $isSheet) {
+            ArchiveSheetView(current: $selectedMeal, isSheet: $isSheet)
+                .presentationDetents([.fraction(0.7)])
+        }
+    }
+}
+
+struct ArchiveSheetView: View {
+    @Environment(\.managedObjectContext) private var moc
+    @EnvironmentObject private var db: SharedDBData
+    @EnvironmentObject private var searchObj: SearchObject
+    @Binding var current: Meal?
+    @Binding var isSheet: Bool
+    @State private var isEditName: Bool = false
+    @State private var isEditCategory: Bool = false
+    @State private var isEditArea: Bool = false
+    @State private var newName: String = ""
+    @State private var newCategory: String = ""
+    @State private var newArea: String = ""
+    private let maxLength: Int = 25
+
+    private var isSaveEnabled: Bool {
+        !newName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+        !newCategory.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+        !newArea.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
+    private func truncateTxt(for text: String) -> String {
+        if text.count > maxLength {
+            let i = text.index(text.startIndex, offsetBy: maxLength)
+            return String(text[..<i]).appending("...")
+        } else {
+            return text
+        }
+    }
+
+    var body: some View {
+        if let meal = current {
+            VStack {
+                HStack {
+                    Spacer()
+                    Text("Redigere \(truncateTxt(for: meal.wrappedName))")
+                        .offset(x: 20)
+                    Spacer()
+                    Button {
+                        isSheet.toggle()
+                    } label: {
+                        Text("Avbryt")
+                    }
+                }
+                .padding()
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
+                
+                KFImage(URL(string: meal.wrappedThumb))
+                    .resizable()
+                    .scaledToFit()
+                    .clipShape(Circle())
+                    .frame(width: 150, height: 150)
+                    .overlay(Circle().stroke(Color(.systemPurple), lineWidth: 4))
+                    .padding()
+                    .padding(.top)
+                
+                
+                Form {
+                    HStack {
+                        if isEditName {
+                            TextField("New name..", text: $newName)
+                        } else {
+                            Text("Original name: \(meal.wrappedName)")
+                        }
+                        Spacer()
+                        EditButton(isEditing: $isEditName)
+                    }
+                    HStack {
+                        if isEditCategory {
+                            TextField("New category..", text: $newCategory)
+                        } else {
+                            Text("Original category: \(meal.wrappedCategory)")
+                        }
+                        Spacer()
+                        EditButton(isEditing: $isEditCategory)
+                    }
+                    HStack {
+                        if isEditArea {
+                            TextField("New area..", text: $newArea)
+                        } else {
+                            Text("Original area: \(meal.wrappedArea)")
+                        }
+                        Spacer()
+                        EditButton(isEditing: $isEditArea)
+                    }
+                    SaveButton(meal: meal)
+                        .disabled(!isSaveEnabled)
+                }
+            }
+        }
+    }
+
+    private func EditButton(isEditing: Binding<Bool>) -> some View {
+        Image(systemName: "rectangle.and.pencil.and.ellipsis.rtl")
+            .onTapGesture {
+                isEditing.wrappedValue.toggle()
+            }
+            .foregroundColor(Color.blue)
+    }
+
+    private func SaveButton(meal: Meal) -> some View {
+        Button {
+            meal.strMeal = searchObj.currentInput
+            Task {
+                do {
+                    try moc.save()
+                    db.fetchArchivedMeal()
+                    isSheet = false
+                    searchObj.resetInput()
+                } catch {
+                    print("Error saving: \(error.localizedDescription)")
+                }
+            }
+        } label: {
+            HStack(alignment: .center) {
+                Text("Save")
+                Image(systemName: "paperplane.circle")
+            }
+            .padding()
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+        }
     }
 }
 

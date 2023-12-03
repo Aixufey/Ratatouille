@@ -149,4 +149,22 @@ struct APIService {
             throw Errors.unknown(underlying: error)
         }
     }
+    
+    func fetchIngredientImage(for ingredient: Ingredient) async throws -> String {
+        guard let url = URL(string: "https://www.themealdb.com/images/ingredients/\(ingredient.wrappedName).png") else {
+            throw Errors.errorMessage("Invalid URL")
+        }
+            
+        let (data, resp) = try await URLSession.shared.data(from: url)
+        
+        guard let header = resp as? HTTPURLResponse else {
+            throw Errors.statusCode(500)
+        }
+        
+        guard let mime = header.mimeType, mime.contains("image") else {
+            return "https://cdn-icons-png.flaticon.com/512/4636/4636408.png"
+        }
+        
+        return url.absoluteString
+    }
 }

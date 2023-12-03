@@ -7,36 +7,35 @@
 
 import SwiftUI
 import Kingfisher
-
+import CoreData
 struct RecipesListView: View {
     @Environment(\.managedObjectContext) var moc
     @EnvironmentObject private var db: SharedDBData
-    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)], animation: .default) private var items: FetchedResults<Item>
     
     @EnvironmentObject private var unifiedData: UnifiedModelData
     @State private var isShowing: Bool = false
     @State private var isRecipes: Bool = false
     @State private var isInstruction: Bool = false
     @State private var isIngredient: Bool = false
-    func toggleFavoriteMeal(_ meal: Meal) {
+    private func toggleFavoriteMeal(_ meal: Meal) {
         meal.isFavorite.toggle()
         do {
             try moc.save()
-            db.fetchMeal()
         } catch {
             print("Error toggle meal", error)
         }
+        db.fetchMeal()
     }
-    func archiveMeal(_ meal: Meal) {
+    private func archiveMeal(_ meal: Meal) {
         meal.isArchive.toggle()
         meal.timeStamp = Date()
         do {
             try moc.save()
-            db.fetchMeal()
-            db.fetchArchivedMeal()
         } catch {
             print("Error archiving meal ", error)
         }
+        db.fetchMeal()
+        db.fetchArchivedMeal()
     }
     var body: some View {
         VStack {
@@ -128,9 +127,14 @@ struct RecipesListView: View {
                                                     }
                                                 }) {
                                                     if isIngredient {
-                                                        ForEach(meal.ingredientsArray) { ing in
-                                                            Text(ing.wrappedName)
-                                                                .padding(.top)
+                                                        ForEach(db.ingredients, id: \.idIngredient) { ingredient in
+                                                            LazyHStack {
+                                                                KFImage(URL(string: "https://www.themealdb.com/images/ingredients/\(ingredient.wrappedName).png"))
+                                                                    .resizable()
+                                                                    .scaledToFit()
+                                                                    .frame(width: 50, height: 50)
+                                                                Text(ingredient.wrappedName)
+                                                            }
                                                         }
                                                     }
                                                 } // sect 2
@@ -191,8 +195,6 @@ struct RecipesListView: View {
                     }
                 }
             } // ScrollView
-            
-            
             
             
         } // VStack
