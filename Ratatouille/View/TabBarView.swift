@@ -36,7 +36,7 @@ struct TabBarView: View {
                             Label("Søk", systemImage: "magnifyingglass.circle")
                         }
                     SettingsView()
-                        .environmentObject(SearchObject().self)
+                        .environmentObject(SearchObject())
                         .tabItem {
                             Label("Innstillinger", systemImage: "gearshape")
                         }
@@ -49,9 +49,9 @@ struct TabBarView: View {
 struct TabBarView_Previews: PreviewProvider {
     static var previews: some View {
         TabBarView()
-            .environmentObject(SearchObject().self)
-            .environmentObject(AppSettings().self)
-            .environmentObject(UnifiedModelData().self)
+            .environmentObject(SearchObject())
+            .environmentObject(AppSettings())
+            .environmentObject(UnifiedModelData())
             .environmentObject(SharedDBData(context: PersistenceController.shared.container.viewContext))
     }
 }

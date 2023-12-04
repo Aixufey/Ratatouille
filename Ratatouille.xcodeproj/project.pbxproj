@@ -12,9 +12,7 @@
 		71315F6E2B128B9600FED5BA /* UnifiedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71315F6D2B128B9600FED5BA /* UnifiedModel.swift */; };
 		713670132B161CE900C7BFC9 /* UnifiedModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713670122B161CE900C7BFC9 /* UnifiedModelData.swift */; };
 		71474FE62B1D48F20027C2F5 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71474FE52B1D48F20027C2F5 /* SplashView.swift */; };
-		714929EF2B0D0BA600074617 /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929EE2B0D0BA600074617 /* CategoriesView.swift */; };
 		714929F12B0D21C800074617 /* SettingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929F02B0D21C800074617 /* SettingDetailView.swift */; };
-		714929F32B0D21D300074617 /* IngredientsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929F22B0D21D300074617 /* IngredientsView.swift */; };
 		714929F52B0D21E200074617 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929F42B0D21E200074617 /* ArchiveView.swift */; };
 		714929FC2B0D56A000074617 /* Help.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929FB2B0D56A000074617 /* Help.swift */; };
 		714929FF2B0D59D100074617 /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929FE2B0D59D100074617 /* SettingsRowView.swift */; };
@@ -86,9 +84,7 @@
 		71315F6D2B128B9600FED5BA /* UnifiedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedModel.swift; sourceTree = "<group>"; };
 		713670122B161CE900C7BFC9 /* UnifiedModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedModelData.swift; sourceTree = "<group>"; };
 		71474FE52B1D48F20027C2F5 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
-		714929EE2B0D0BA600074617 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
 		714929F02B0D21C800074617 /* SettingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingDetailView.swift; sourceTree = "<group>"; };
-		714929F22B0D21D300074617 /* IngredientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsView.swift; sourceTree = "<group>"; };
 		714929F42B0D21E200074617 /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
 		714929FB2B0D56A000074617 /* Help.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Help.swift; sourceTree = "<group>"; };
 		714929FE2B0D59D100074617 /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
@@ -185,8 +181,6 @@
 			isa = PBXGroup;
 			children = (
 				714929F02B0D21C800074617 /* SettingDetailView.swift */,
-				714929EE2B0D0BA600074617 /* CategoriesView.swift */,
-				714929F22B0D21D300074617 /* IngredientsView.swift */,
 				714929F42B0D21E200074617 /* ArchiveView.swift */,
 			);
 			path = SettingsSubView;
@@ -300,6 +294,7 @@
 		716D14362B0CE42800BB1DF3 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				71474FE52B1D48F20027C2F5 /* SplashView.swift */,
 				716D14302B0CDFC400BB1DF3 /* TabBarView.swift */,
 				716D14322B0CE3F600BB1DF3 /* RecipesListView.swift */,
 				716D14342B0CE41800BB1DF3 /* SearchView.swift */,
@@ -307,7 +302,6 @@
 				716481872B0235110020C704 /* ContentView.swift */,
 				714929F62B0D220400074617 /* SettingsSubView */,
 				71A1DF122B12BDA900367623 /* SearchSubView */,
-				71474FE52B1D48F20027C2F5 /* SplashView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -501,7 +495,6 @@
 			files = (
 				716D141D2B0BF5BC00BB1DF3 /* ImageAsset.swift in Sources */,
 				71492A052B0D644F00074617 /* AreaDTO.swift in Sources */,
-				714929F32B0D21D300074617 /* IngredientsView.swift in Sources */,
 				710B96D62B17CE050052E6B1 /* Meal+CoreDataClass.swift in Sources */,
 				717F13172B18AF450017973A /* SharedDBData.swift in Sources */,
 				71492A012B0D5ACC00074617 /* CategoryDTO.swift in Sources */,
@@ -522,7 +515,6 @@
 				710B96D72B17CE050052E6B1 /* Meal+CoreDataProperties.swift in Sources */,
 				716D14332B0CE3F600BB1DF3 /* RecipesListView.swift in Sources */,
 				71A1DF112B12BDA300367623 /* SearchResultView.swift in Sources */,
-				714929EF2B0D0BA600074617 /* CategoriesView.swift in Sources */,
 				714929FF2B0D59D100074617 /* SettingsRowView.swift in Sources */,
 				71A1DF162B13557100367623 /* DetailView.swift in Sources */,
 				714929FC2B0D56A000074617 /* Help.swift in Sources */,
