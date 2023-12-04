@@ -24,9 +24,8 @@ private struct TransformTest: Hashable {
 struct SearchResultView: View {
     @Environment(\.managedObjectContext) var moc
     @EnvironmentObject var db: SharedDBData
-    @FetchRequest(sortDescriptors: [.init(key: "strMeal", ascending: true)]) var mealsdb: FetchedResults<Meal>
-    
     @EnvironmentObject var search: SearchObject
+    
     @Binding private var unifiedResult: UnifiedModel
     @StateObject private var DVModel = DetailViewModel()
     @State private var hashTable = Set<[TransformTest]>()
@@ -332,7 +331,7 @@ struct SearchResultView_Previews: PreviewProvider {
     static var previews: some View {
         Wrapper()
             .environmentObject(SharedDBData(context: PersistenceController.shared.container.viewContext))
-            .environmentObject(SearchObject().self)
-            .environmentObject(AppSettings().self)
+            .environmentObject(SearchObject())
+            .environmentObject(AppSettings())
     }
 }

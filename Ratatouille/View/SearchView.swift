@@ -423,9 +423,9 @@ private struct SheetView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         SearchView()
-            .environmentObject(SearchObject().self)
-            .environmentObject(UnifiedModelData().self)
-            .environmentObject(AppSettings().self)
+            .environmentObject(SearchObject())
+            .environmentObject(UnifiedModelData())
+            .environmentObject(AppSettings())
     }
 }
 struct SheetView_Previews: PreviewProvider {
@@ -441,7 +441,7 @@ struct SheetView_Previews: PreviewProvider {
     }
     static var previews: some View {
         Wrapper()
-            .environmentObject(AppSettings().self)
+            .environmentObject(AppSettings())
     }
 }
 

@@ -155,7 +155,7 @@ struct APIService {
             throw Errors.errorMessage("Invalid URL")
         }
             
-        let (data, resp) = try await URLSession.shared.data(from: url)
+        let (_, resp) = try await URLSession.shared.data(from: url)
         
         guard let header = resp as? HTTPURLResponse else {
             throw Errors.statusCode(500)
