@@ -11,6 +11,7 @@
 		710B96D72B17CE050052E6B1 /* Meal+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B96CD2B17CE050052E6B1 /* Meal+CoreDataProperties.swift */; };
 		71315F6E2B128B9600FED5BA /* UnifiedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71315F6D2B128B9600FED5BA /* UnifiedModel.swift */; };
 		713670132B161CE900C7BFC9 /* UnifiedModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713670122B161CE900C7BFC9 /* UnifiedModelData.swift */; };
+		71474FE62B1D48F20027C2F5 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71474FE52B1D48F20027C2F5 /* SplashView.swift */; };
 		714929EF2B0D0BA600074617 /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929EE2B0D0BA600074617 /* CategoriesView.swift */; };
 		714929F12B0D21C800074617 /* SettingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929F02B0D21C800074617 /* SettingDetailView.swift */; };
 		714929F32B0D21D300074617 /* IngredientsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929F22B0D21D300074617 /* IngredientsView.swift */; };
@@ -84,6 +85,7 @@
 		710B96CD2B17CE050052E6B1 /* Meal+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Meal+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		71315F6D2B128B9600FED5BA /* UnifiedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedModel.swift; sourceTree = "<group>"; };
 		713670122B161CE900C7BFC9 /* UnifiedModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedModelData.swift; sourceTree = "<group>"; };
+		71474FE52B1D48F20027C2F5 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		714929EE2B0D0BA600074617 /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
 		714929F02B0D21C800074617 /* SettingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingDetailView.swift; sourceTree = "<group>"; };
 		714929F22B0D21D300074617 /* IngredientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientsView.swift; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 				716481872B0235110020C704 /* ContentView.swift */,
 				714929F62B0D220400074617 /* SettingsSubView */,
 				71A1DF122B12BDA900367623 /* SearchSubView */,
+				71474FE52B1D48F20027C2F5 /* SplashView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -537,6 +540,7 @@
 				716D14312B0CDFC400BB1DF3 /* TabBarView.swift in Sources */,
 				717F13422B1A79E90017973A /* Ingredient+CoreDataClass.swift in Sources */,
 				716481862B0235110020C704 /* RatatouilleApp.swift in Sources */,
+				71474FE62B1D48F20027C2F5 /* SplashView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

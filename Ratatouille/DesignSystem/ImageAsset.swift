@@ -13,6 +13,8 @@ enum ImageAsset: String {
     case Logo = "logo"
     case Moustache = "moustache"
     case Hat = "hat"
+    case Chef = "chef"
+    case ChefHat = "chef-hat"
     
     var name: Image{
         return Image(self.rawValue)

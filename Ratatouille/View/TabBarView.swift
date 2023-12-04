@@ -8,22 +8,40 @@
 import SwiftUI
 
 struct TabBarView: View {
+    @EnvironmentObject private var settings: AppSettings
+    
     var body: some View {
-        
-        TabView {
-            RecipesListView()
-                .tabItem {
-                    Label("Mine oppskrifter", systemImage: "fork.knife.circle")
+        ZStack {
+            if settings.isSplashView {
+                ZStack {
+                    Color.black
+                        .ignoresSafeArea()
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                withAnimation(.easeOut(duration: 1.5)) {
+                                    settings.isSplashView.toggle()
+                                }
+                            }
+                        }
+                    SplashView()
                 }
-            SearchView()
-                .tabItem {
-                    Label("Søk", systemImage: "magnifyingglass.circle")
+            } else {
+                TabView {
+                    RecipesListView()
+                        .tabItem {
+                            Label("Mine oppskrifter", systemImage: "fork.knife.circle")
+                        }
+                    SearchView()
+                        .tabItem {
+                            Label("Søk", systemImage: "magnifyingglass.circle")
+                        }
+                    SettingsView()
+                        .environmentObject(SearchObject().self)
+                        .tabItem {
+                            Label("Innstillinger", systemImage: "gearshape")
+                        }
                 }
-            SettingsView()
-                .environmentObject(SearchObject().self)
-                .tabItem {
-                    Label("Innstillinger", systemImage: "gearshape")
-                }
+            }
         }
     }
 }
