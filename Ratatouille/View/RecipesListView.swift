@@ -64,9 +64,9 @@ struct RecipesListView: View {
                     Text("Søk historikk")
                     LazyVStack {
                         SearchResultView(currentSearchResult: $unifiedData.unifiedModel)
-                            .environmentObject(SearchObject().self)
-                            .environmentObject(AppSettings().self)
-                            .environmentObject(UnifiedModelData().self)
+                            .environmentObject(SearchObject())
+                            .environmentObject(AppSettings())
+                            .environmentObject(UnifiedModelData())
                     }.padding(.top)
                 } else {
                     if db.activeMeals.isEmpty {
@@ -205,8 +205,8 @@ struct RecipesListView_Previews: PreviewProvider {
     static var previews: some View {
         RecipesListView()
             .environmentObject(SharedDBData(context: PersistenceController.shared.container.viewContext))
-            .environmentObject(SearchObject().self)
-            .environmentObject(AppSettings().self)
-            .environmentObject(UnifiedModelData().self)
+            .environmentObject(SearchObject())
+            .environmentObject(AppSettings())
+            .environmentObject(UnifiedModelData())
     }
 }
