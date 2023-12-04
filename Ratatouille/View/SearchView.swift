@@ -9,20 +9,21 @@ import SwiftUI
 import Kingfisher
 
 
-@MainActor class SearchObject: ObservableObject {
+@MainActor
+class SearchObject: ObservableObject {
     @Published var isEmpty: Bool = false
     @Published var currentInput: String = ""
     @Published var currentResult = UnifiedModel()
     
     func resetResult() {
-        Task{ @MainActor in
-            currentResult = UnifiedModel()
-        }
+        
+        currentResult = UnifiedModel()
+        
     }
     func resetInput() {
-        Task{ @MainActor in
-            currentInput = ""
-        }
+        
+        currentInput = ""
+        
     }
 }
 enum SheetItem: Int, CaseIterable {
