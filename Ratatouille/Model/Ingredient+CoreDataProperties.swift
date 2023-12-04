@@ -2,7 +2,7 @@
 //  Ingredient+CoreDataProperties.swift
 //  Ratatouille
 //
-//  Created by Jack Xia on 29/11/2023.
+//  Created by Jack Xia on 01/12/2023.
 //
 //
 
@@ -15,11 +15,18 @@ extension Ingredient {
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Ingredient> {
         return NSFetchRequest<Ingredient>(entityName: "Ingredient")
     }
-
+    
+    
+    @NSManaged public var timeStamp: Date
+    @NSManaged public var isArchive: Bool
     @NSManaged public var idIngredient: String?
     @NSManaged public var strIngredient: String?
     @NSManaged public var meals: NSSet?
     
+    override public func awakeFromInsert() {
+        super.awakeFromInsert()
+        self.idIngredient = UUID().uuidString
+    }
     
     public var wrappedName: String {
         strIngredient ?? "Unknown Ingredient"
@@ -31,6 +38,12 @@ extension Ingredient {
         return set.sorted {
             $0.wrappedName < $1.wrappedName
         }
+    }
+    public var wrappedTimeStamp: String {
+        let df = DateFormatter()
+        df.dateFormat = "d MMM, yyyy 'kl' hh:mm:ss a"
+        df.locale = Locale(identifier: "en_US")
+        return df.string(from: timeStamp)
     }
 }
 

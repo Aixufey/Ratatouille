@@ -11,6 +11,8 @@
 		710B96D72B17CE050052E6B1 /* Meal+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B96CD2B17CE050052E6B1 /* Meal+CoreDataProperties.swift */; };
 		71315F6E2B128B9600FED5BA /* UnifiedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71315F6D2B128B9600FED5BA /* UnifiedModel.swift */; };
 		713670132B161CE900C7BFC9 /* UnifiedModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713670122B161CE900C7BFC9 /* UnifiedModelData.swift */; };
+		713957C92B1DAE4C007300A4 /* Ingredient+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713957C72B1DAE4B007300A4 /* Ingredient+CoreDataProperties.swift */; };
+		713957CA2B1DAE4C007300A4 /* Ingredient+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 713957C82B1DAE4B007300A4 /* Ingredient+CoreDataClass.swift */; };
 		71474FE62B1D48F20027C2F5 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71474FE52B1D48F20027C2F5 /* SplashView.swift */; };
 		714929F12B0D21C800074617 /* SettingDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929F02B0D21C800074617 /* SettingDetailView.swift */; };
 		714929F52B0D21E200074617 /* ArchiveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714929F42B0D21E200074617 /* ArchiveView.swift */; };
@@ -50,8 +52,6 @@
 		717F13372B1A76390017973A /* Area+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717F13352B1A76390017973A /* Area+CoreDataProperties.swift */; };
 		717F133A2B1A786E0017973A /* Category+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717F13382B1A786E0017973A /* Category+CoreDataClass.swift */; };
 		717F133B2B1A786E0017973A /* Category+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717F13392B1A786E0017973A /* Category+CoreDataProperties.swift */; };
-		717F13422B1A79E90017973A /* Ingredient+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717F13402B1A79E90017973A /* Ingredient+CoreDataClass.swift */; };
-		717F13432B1A79E90017973A /* Ingredient+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717F13412B1A79E90017973A /* Ingredient+CoreDataProperties.swift */; };
 		718911F32B0E5244004E3A95 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718911F22B0E5244004E3A95 /* APIService.swift */; };
 		718911FA2B0E91B7004E3A95 /* Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718911F92B0E91B7004E3A95 /* Example.swift */; };
 		718911FC2B0EB633004E3A95 /* MealDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718911FB2B0EB633004E3A95 /* MealDTO.swift */; };
@@ -83,6 +83,8 @@
 		710B96CD2B17CE050052E6B1 /* Meal+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Meal+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		71315F6D2B128B9600FED5BA /* UnifiedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedModel.swift; sourceTree = "<group>"; };
 		713670122B161CE900C7BFC9 /* UnifiedModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnifiedModelData.swift; sourceTree = "<group>"; };
+		713957C72B1DAE4B007300A4 /* Ingredient+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Ingredient+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		713957C82B1DAE4B007300A4 /* Ingredient+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Ingredient+CoreDataClass.swift"; sourceTree = "<group>"; };
 		71474FE52B1D48F20027C2F5 /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
 		714929F02B0D21C800074617 /* SettingDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingDetailView.swift; sourceTree = "<group>"; };
 		714929F42B0D21E200074617 /* ArchiveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveView.swift; sourceTree = "<group>"; };
@@ -125,8 +127,6 @@
 		717F13352B1A76390017973A /* Area+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Area+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		717F13382B1A786E0017973A /* Category+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Category+CoreDataClass.swift"; sourceTree = "<group>"; };
 		717F13392B1A786E0017973A /* Category+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Category+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		717F13402B1A79E90017973A /* Ingredient+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Ingredient+CoreDataClass.swift"; path = "../../Ingredient+CoreDataClass.swift"; sourceTree = "<group>"; };
-		717F13412B1A79E90017973A /* Ingredient+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Ingredient+CoreDataProperties.swift"; path = "../../Ingredient+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		718911F22B0E5244004E3A95 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		718911F92B0E91B7004E3A95 /* Example.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example.swift; sourceTree = "<group>"; };
 		718911FB2B0EB633004E3A95 /* MealDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealDTO.swift; sourceTree = "<group>"; };
@@ -309,13 +309,13 @@
 		716D14372B0CE4B500BB1DF3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				713957C82B1DAE4B007300A4 /* Ingredient+CoreDataClass.swift */,
+				713957C72B1DAE4B007300A4 /* Ingredient+CoreDataProperties.swift */,
 				717F13162B18AF450017973A /* SharedDBData.swift */,
 				717F13342B1A76390017973A /* Area+CoreDataClass.swift */,
 				717F13352B1A76390017973A /* Area+CoreDataProperties.swift */,
 				717F13382B1A786E0017973A /* Category+CoreDataClass.swift */,
 				717F13392B1A786E0017973A /* Category+CoreDataProperties.swift */,
-				717F13402B1A79E90017973A /* Ingredient+CoreDataClass.swift */,
-				717F13412B1A79E90017973A /* Ingredient+CoreDataProperties.swift */,
 				717F13242B1A1CA80017973A /* MealIngredient+CoreDataClass.swift */,
 				717F13252B1A1CA80017973A /* MealIngredient+CoreDataProperties.swift */,
 				710B96CC2B17CE050052E6B1 /* Meal+CoreDataClass.swift */,
@@ -507,7 +507,6 @@
 				716D142B2B0C01E700BB1DF3 /* SettingsView.swift in Sources */,
 				717F13282B1A1CA80017973A /* MealIngredient+CoreDataClass.swift in Sources */,
 				7164818F2B0235130020C704 /* Persistence.swift in Sources */,
-				717F13432B1A79E90017973A /* Ingredient+CoreDataProperties.swift in Sources */,
 				716481882B0235110020C704 /* ContentView.swift in Sources */,
 				71315F6E2B128B9600FED5BA /* UnifiedModel.swift in Sources */,
 				716D14352B0CE41800BB1DF3 /* SearchView.swift in Sources */,
@@ -527,11 +526,12 @@
 				717F133A2B1A786E0017973A /* Category+CoreDataClass.swift in Sources */,
 				717F133B2B1A786E0017973A /* Category+CoreDataProperties.swift in Sources */,
 				717F13372B1A76390017973A /* Area+CoreDataProperties.swift in Sources */,
+				713957C92B1DAE4C007300A4 /* Ingredient+CoreDataProperties.swift in Sources */,
 				716D14192B0BD92100BB1DF3 /* CustomFonts.swift in Sources */,
 				716481922B0235130020C704 /* Ratatouille.xcdatamodeld in Sources */,
 				716D14312B0CDFC400BB1DF3 /* TabBarView.swift in Sources */,
-				717F13422B1A79E90017973A /* Ingredient+CoreDataClass.swift in Sources */,
 				716481862B0235110020C704 /* RatatouilleApp.swift in Sources */,
+				713957CA2B1DAE4C007300A4 /* Ingredient+CoreDataClass.swift in Sources */,
 				71474FE62B1D48F20027C2F5 /* SplashView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
