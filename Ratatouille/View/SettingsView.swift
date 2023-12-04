@@ -154,11 +154,10 @@ struct ExtractedView: View {
             ZStack(alignment: .leading) {
                 Text("Se alle \(title.lowercased())")
                     .onTapGesture {
-                        Task { @MainActor in
+                        Task {
                             isSheet.toggle()
                             do {
                                 if title == "Landområder" {
-                                    
                                     let result: AreaDTO = try await APIService.shared.fetchList(endpoint: .allAreas)
                                     searchObj.currentResult.area = result
                                     //print(searchObj.currentResult.area)
@@ -187,62 +186,3 @@ struct ExtractedView: View {
         .presentationDetents([.fraction(0.3)])
     }
 }
-
-//struct ExtractedView: View {
-//    @EnvironmentObject private var searchObj: SearchObject
-//    @EnvironmentObject private var settings: AppSettings
-//    @Binding private var isSheet: Bool
-//    @Binding private var title: String
-//    init(isSheet: Binding<Bool> = .constant(false), title: Binding<String> = .constant("Not set")) {
-//        self._isSheet = isSheet
-//        self._title = title
-//    }
-//    var body: some View {
-//        VStack(alignment: .center) {
-//            HStack {
-//                Text("Avbryt")
-//                    .onTapGesture {
-//                        isSheet.toggle()
-//                    }
-//                    .foregroundColor(Color(.systemBlue))
-//                Spacer()
-//                Text(title)
-//                Spacer()
-//                Text("Søk")
-//                    .onTapGesture {
-//                        if !searchObj.currentInput.isEmpty {
-//                            isSheet.toggle()
-//                            Task { @MainActor in
-//                                do {
-//                                    let result: AreaDTO = try await APIService.shared.fetchList(endpoint: .allAreas)
-//
-//                                }
-//                            }
-//                        }
-//                        print(searchObj.currentInput)
-//                    }
-//                    .foregroundColor(Color(.systemBlue))
-//            }
-//            .padding()
-//            Spacer()
-//            ZStack(alignment: .leading) {
-//                Text("Søk...")
-//                    .padding(.leading, 10)
-//                    .foregroundColor(settings.isDarkMode ? .white : .black)
-//                    .opacity(searchObj.currentInput.isEmpty ? 1 : 0)
-//                TextField("", text: $searchObj.currentInput)
-//                    .padding(.leading, 10)
-//                    .autocorrectionDisabled()
-//            }
-//            .frame(width: 300 , height: 60)
-//            .background(Rectangle().foregroundColor(Color(.systemGray5)))
-//            .cornerRadius(10)
-//            .overlay(
-//                RoundedRectangle(cornerRadius: 10)
-//                    .stroke(Color.gray, lineWidth: 2)
-//            )
-//            .padding(.bottom, 35)
-//        }
-//        .presentationDetents([.fraction(0.3)])
-//    }
-//}

@@ -74,7 +74,7 @@ struct SettingDetailView: View {
         }
     }
     private func archiveCategory(_ category: Category) {
-        print("archive area \(category.wrappedName)")
+        //print("archive area \(category.wrappedName)")
         category.isArchive.toggle()
         category.timeStamp = Date()
         do {
@@ -86,17 +86,15 @@ struct SettingDetailView: View {
         }
     }
     private func archiveArea(_ area: Area) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            print("archive area \(area.wrappedName)")
-            area.isArchive.toggle()
-            area.timeStamp = Date()
-            do {
-                try moc.save()
-                db.fetchArea()
-                db.fetchArchivedArea()
-            } catch {
-                print("Error archiving area ", error)
-            }
+        //print("archive area \(area.wrappedName)")
+        area.isArchive.toggle()
+        area.timeStamp = Date()
+        do {
+            try moc.save()
+            db.fetchArea()
+            db.fetchArchivedArea()
+        } catch {
+            print("Error archiving area ", error)
         }
     }
     var body: some View {
@@ -121,7 +119,7 @@ struct SettingDetailView: View {
                                 }
                                 .swipeActions(edge: .trailing) {
                                     Button {
-                                        Task { @MainActor in
+                                        Task {
                                             //print("area \(area.wrappedName)")
                                             archiveArea(area)
                                         }
@@ -149,7 +147,7 @@ struct SettingDetailView: View {
                                 }
                                 .swipeActions(edge: .trailing) {
                                     Button {
-                                        Task { @MainActor in
+                                        Task {
                                             //print("category \(cat.wrappedName)")
                                             archiveCategory(cat)
                                         }
@@ -177,7 +175,7 @@ struct SettingDetailView: View {
                                 }
                                 .swipeActions(edge: .trailing) {
                                     Button {
-                                        Task { @MainActor in
+                                        Task {
                                             //print("ingredient \(ing.wrappedName)")
                                             archiveIngredient(ing)
                                         }
@@ -200,7 +198,7 @@ struct SettingDetailView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button {
-                                Task { @MainActor in
+                                Task {
                                     try saveArea(for: area.strArea ?? "")
                                     searchObj.currentResult.area?.meals.remove(at: index)
                                 }
@@ -219,7 +217,7 @@ struct SettingDetailView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button {
-                                Task { @MainActor in
+                                Task {
                                     try saveCategory(for: category.strCategory)
                                     searchObj.currentResult.category?.categories?.remove(at: index)
                                 }
@@ -238,7 +236,7 @@ struct SettingDetailView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button {
-                                Task { @MainActor in
+                                Task {
                                     try saveIngredient(for: ing.wrappedStrIngredient)
                                     searchObj.currentResult.ingredient?.meals?.remove(at: index)
                                 }

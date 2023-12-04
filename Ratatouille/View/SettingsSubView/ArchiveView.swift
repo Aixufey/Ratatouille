@@ -19,85 +19,85 @@ struct ArchiveView: View {
         moc.delete(meal)
         do {
             try moc.save()
+            db.fetchArchivedMeal()
+            db.fetchMeal()
         } catch {
             print("Error deleting ", error)
             moc.rollback()
         }
-        db.fetchArchivedMeal()
-        db.fetchMeal()
     }
     private func restoreMeal(_ meal: Meal) {
         meal.isArchive.toggle()
         do {
             try moc.save()
+            db.fetchArchivedMeal()
+            db.fetchMeal()
         } catch {
             print("Error restoring ", error)
         }
-        db.fetchArchivedMeal()
-        db.fetchMeal()
     }
     private func deleteArea(_ area: Area) {
         moc.delete(area)
         do {
             try moc.save()
+            db.fetchArchivedArea()
+            db.fetchArea()
         } catch {
             print("Error deleting ", error)
             moc.rollback()
         }
-        db.fetchArchivedArea()
-        db.fetchArea()
     }
     private func restoreArea(_ area: Area) {
         area.isArchive.toggle()
         do {
             try moc.save()
+            db.fetchArchivedArea()
+            db.fetchArea()
         } catch {
             print("Error restoring ", error)
         }
-        db.fetchArchivedArea()
-        db.fetchArea()
     }
     private func deleteCategory(_ category: Category) {
         moc.delete(category)
         do {
             try moc.save()
+            db.fetchArchivedCategory()
+            db.fetchCategory()
         } catch {
             print("Error deleting ", error)
             moc.rollback()
         }
-        db.fetchArchivedCategory()
-        db.fetchCategory()
     }
     private func restoreCategory(_ category: Category) {
         category.isArchive.toggle()
         do {
             try moc.save()
+            db.fetchArchivedCategory()
+            db.fetchCategory()
         } catch {
             print("Error restoring ", error)
         }
-        db.fetchArchivedCategory()
-        db.fetchCategory()
     }
     private func deleteIngredient(_ ingredient: Ingredient) {
         moc.delete(ingredient)
         do {
             try moc.save()
+            db.fetchArchivedIngredient()
+            db.fetchIngredient()
         } catch {
             print("Error deleting ", error)
             moc.rollback()
         }
-        db.fetchArchivedIngredient()
-        db.fetchIngredient()
     }
     private func restoreIngredient(_ ingredient: Ingredient) {
         ingredient.isArchive.toggle()
         do {
             try moc.save()
+            db.fetchArchivedIngredient()
+            db.fetchIngredient()
         } catch {
             print("Error restoring ", error)
         }
-        db.fetchArchivedIngredient()
-        db.fetchIngredient()
     }
     var body: some View {
         List {
@@ -116,7 +116,7 @@ struct ArchiveView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
-                                Task { @MainActor in
+                                Task {
                                     deleteArea(area)
                                 }
                             } label: {
@@ -124,7 +124,7 @@ struct ArchiveView: View {
                             }.tint(.red)
                             
                             Button {
-                                Task { @MainActor in
+                                Task {
                                     restoreArea(area)
                                 }
                             } label: {
@@ -150,7 +150,7 @@ struct ArchiveView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
-                                Task { @MainActor in
+                                Task {
                                     deleteCategory(cat)
                                 }
                             } label: {
@@ -158,7 +158,7 @@ struct ArchiveView: View {
                             }.tint(.red)
                             
                             Button {
-                                Task { @MainActor in
+                                Task {
                                     restoreCategory(cat)
                                 }
                             } label: {
@@ -184,7 +184,7 @@ struct ArchiveView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
-                                Task { @MainActor in
+                                Task {
                                     deleteIngredient(ing)
                                 }
                             } label: {
@@ -192,7 +192,7 @@ struct ArchiveView: View {
                             }.tint(.red)
                             
                             Button {
-                                Task { @MainActor in
+                                Task {
                                     restoreIngredient(ing)
                                 }
                             } label: {
@@ -226,20 +226,16 @@ struct ArchiveView: View {
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button {
-                                withAnimation(.easeInOut(duration: 0.33)) {
-                                    DispatchQueue.main.async {
-                                        deleteMeal(meal)
-                                    }
+                                Task {
+                                    deleteMeal(meal)
                                 }
                             } label: {
                                 Image(systemName: "trash")
                             }.tint(.red)
                             
                             Button {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    DispatchQueue.main.async {
-                                        restoreMeal(meal)
-                                    }
+                                Task {
+                                    restoreMeal(meal)
                                 }
                             } label: {
                                 Image(systemName: "tray.and.arrow.up")

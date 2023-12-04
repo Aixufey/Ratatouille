@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-
+@MainActor
 struct APIService {
     // Singleton - No external instantiations
     static let shared = APIService()
