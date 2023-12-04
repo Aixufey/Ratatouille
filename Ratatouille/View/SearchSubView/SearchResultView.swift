@@ -38,6 +38,7 @@ struct SearchResultView: View {
         self.API = API
     }
 
+    @MainActor
     private func saveFavoriteToDatabase(for id: String) throws {
         let request = Meal.fetchRequest()
         request.predicate = NSPredicate(format: "idMeal == %@", id)
@@ -47,6 +48,7 @@ struct SearchResultView: View {
             try? moc.save()
         }
     }
+    @MainActor
     private func saveRecipeToDatabase(for id: String) async throws {
         let request = Meal.fetchRequest()
         request.predicate = NSPredicate(format: "idMeal == %@", id)
