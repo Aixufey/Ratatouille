@@ -1,5 +1,6 @@
 # Ratatouille
 ## PG5602 iOS Exam 2023 - Candidate 2054
+## Grade A
 
 ---
 
@@ -15,10 +16,15 @@
 ## API
 
 - Food recipes are from `theMealDb.com`
+- Flag API `flagsapi.com/`
 - This application is intended to:
 - Download recipes
 - Save your favorite recipe
 - Filter search recipes
+- Search by Name
+- Search by Region
+- Search by Country
+- Search by Ingredient
 
 ---
 
